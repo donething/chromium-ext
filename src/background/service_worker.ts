@@ -56,7 +56,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   if (changeInfo.status === "complete") {
     // 因为哔哩哔哩自动播放下一集时，网页的 video 元素会变动，所以用 chrome.tabs.onUpdated 监听下一集
-    if (url.host === "www.bilibili.com") {
+    if (url.host === "www.bilibili.com" && url.pathname !== "/") {
       chrome.scripting.executeScript({
         target: {tabId: tab.id},
         files: ["/static/js/bili_video.js"]
