@@ -1,0 +1,17 @@
+/* 代表每个分段视频的下载情况 */
+.dl-status-item {
+  display: inline-block;
+  margin: 2px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  /* 设行高为该元素的高度，实现垂直居中 */
+  line-height: 30px;
+  border: rgba(0, 0, 0, 0.3) 1px solid;
+  border-radius: 3px;
+}
+
+/* 让最后一行左对齐 */
+#dl-status:last-child {
+  margin-right: auto;
+}

@@ -1,0 +1,22 @@
+<!-- V2ex 回复项 -->
+<div style="display: flex;flex-flow: row nowrap;padding: 10px;border-top: rgba(0,0,0,0.1) 1px solid;">
+  <!-- 头像 -->
+  <img src="{avatar}" style="width: 48px;height: 48px;"/>
+  <!-- 回复者、楼层、日期、内容 -->
+  <div style="display: flex;flex-flow: column nowrap;width: 100%;margin-left: 5px;">
+    <div style="display: flex;flex-flow: row nowrap;justify-content: space-between;font-size: small;">
+      <!-- 回复者、是否当前回复 -->
+      <span>
+        <a title="打开用户页面" href="/member/{author}" style="font-weight: bolder" target='_blank'>{author}</a>
+        <span style="color: deepskyblue">{replyTag}</span>
+      </span>
+      <!-- 日期、楼层 -->
+      <span>
+        <span title="回复日期" style="color: #ccc;">{date}</span>
+        <a title="点击跳到该楼" data-floor="{floor}" href='#' style="margin-left: 5px;color: #ccc;">#{floor}</a>
+      </span>
+    </div>
+    <!-- 内容 -->
+    <div style="margin-top: 5px;font-size: 14px;line-height: 1.8;">{content}</div>
+  </div>
+</div>

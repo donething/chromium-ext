@@ -1,0 +1,120 @@
+{
+  "name": "Chromium Ext",
+  "description": "扩展 Chromium 功能",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "/icons/extension_16.png",
+    "48": "/icons/extension_48.png",
+    "128": "/icons/extension_128.png"
+  },
+  "permissions": [
+    "contextMenus",
+    "notifications",
+    "storage",
+    "scripting",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "/static/js/service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "/scripts/comm.js",
+        "/static/js/content.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "*://www.bd2020.com/*"
+      ],
+      "js": [
+        "/static/js/bd2020_dl_page.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://live.bilibili.com/*"
+      ],
+      "exclude_matches": [
+        "*://live.bilibili.com/"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "/static/js/bili_live_room.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://www.douyu.com/*"
+      ],
+      "exclude_matches": [
+        "*://www.douyu.com/"
+      ],
+      "js": [
+        "/static/js/douyu_live_room.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://www.huya.com/*"
+      ],
+      "exclude_matches": [
+        "*://www.huya.com/"
+      ],
+      "js": [
+        "/static/js/huya_live_room.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://v.huya.com/*"
+      ],
+      "js": [
+        "/static/js/huya_video_playback.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://*.javlibrary.com/*"
+      ],
+      "js": [
+        "/static/js/javlib.js"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "*://*.v2ex.com/*"
+      ],
+      "js": [
+        "/static/js/v2ex.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "/index.html#popup",
+    "default_title": "Open the popup"
+  },
+  "options_page": "/index.html#options",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "htmls/*.html",
+        "scripts/*.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
