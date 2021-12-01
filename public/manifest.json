@@ -105,7 +105,6 @@
     "default_popup": "/index.html#popup",
     "default_title": "Open the popup"
   },
-  "options_page": "/index.html#options",
   "web_accessible_resources": [
     {
       "resources": [
