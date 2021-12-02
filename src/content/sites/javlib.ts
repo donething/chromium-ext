@@ -184,17 +184,25 @@ const Javlib = {
   hideRubbishComments: async function () {
     console.log(this.TAG, "扩展功能：隐藏垃圾评论")
     // 获取广告屏蔽样本，格式如下："广告1|广告2|广告3"
-    let ads = (await chrome.storage.sync.get({settings: {javlib_ads: ""}})).settings.javlib_ads
+    let ads = (await chrome.storage.sync.get({settings: {javlibAds: ""}})).settings.javlibAds
     // 已屏蔽的广告条数
     let ban = 0
-    // 使用正则判断是否为广告
-    let adReg = new RegExp(`[${ads}]`, "g")
+    // 遍历评论
     for (let elem of document.querySelectorAll(".comment .text")) {
-      let adText = (elem.closest(".text") as HTMLElement).textContent || ""
-      if (adReg.test(adText)) {
-        (elem.closest(".comment") as HTMLElement).style.display = "none"
+      let adText = (elem.closest(".text") as HTMLElement).innerText
+      if (!adText) {
+        console.log(this.TAG, "目标元素的文本为 null，跳过匹配该元素的广告")
+        continue
+      }
+      // 使用正则判断是否为广告
+      // 注意不能为了性能将`new RegExp(ads)`放在循坏外，避免`lastIndex`偏移导致匹配不到广告的问题
+      // 参考：https://www.cnblogs.com/52cik/p/js-regexp-test.html
+      if (new RegExp(ads).test(adText)) {
+        console.log(this.TAG, "将屏蔽", adText)
+        let target = elem.closest(".comment") as HTMLElement
+        target.style.display = "none"
         ban++
-        console.log(this.TAG, `已屏蔽广告文本：${adText}`)
+        // console.log(this.TAG, `已屏蔽广告文本：${adText}`)
       }
     }
 
@@ -249,7 +257,7 @@ const deal = async function () {
   }
 
   // 番号详情页、评论页
-  if (window.location.href.indexOf("?v=") >= 0) {
+  if (window.location.href.indexOf("/?v=") >= 0) {
     // 添加扩展链接的功能
     Javlib.addExtLink()
     // 添加搜索链接
@@ -261,7 +269,7 @@ const deal = async function () {
   }
 
   // 评论翻页
-  if (window.location.href.indexOf("&v=") >= 0) {
+  if (window.location.pathname.indexOf("videocomments") >= 0) {
     // 隐藏广告评论
     Javlib.hideRubbishComments()
     // 点击楼中楼不跳转到回复框
