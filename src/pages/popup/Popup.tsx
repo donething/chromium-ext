@@ -8,6 +8,7 @@ import {ReactComponent as IconVideo} from "../../icons/video.svg"
 import {ReactComponent as IconHeaders} from "../../icons/headers.svg"
 import {ReactComponent as IconVideoTool} from "../../icons/video_tool.svg"
 import {ReactComponent as IconTV} from "../../icons/tv.svg"
+import {ReactComponent as IconStatus} from "../../icons/status.svg"
 import {ReactComponent as IconOptions} from "../../icons/options.svg"
 
 const Popup = function () {
@@ -88,6 +89,10 @@ const Popup = function () {
 
       <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}>
         <Icon component={IconTV}/> IPTV源
+      </span>
+
+      <span className="clickable" onClick={() => chrome.tabs.create({url: "chrome://sync-internals"})}>
+        <Icon component={IconStatus}/> 浏览器
       </span>
 
       <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/options"})}>
