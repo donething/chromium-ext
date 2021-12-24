@@ -71,7 +71,7 @@ const VideoItem = function (props: VideoItemProps) {
             <div>片尾：{(props.video.time.end || "未设定") + " 秒"}</div>
           </div>
         </div>
-        <div title={props.video.extra.title} className="post-description"
+        <div title={props.video.extra.title} className="posts-content"
              style={{lineHeight: "1.8em", maxHeight: "3.6em", overflow: "hidden"}}>
           {props.video.extra.title}
         </div>
@@ -116,7 +116,7 @@ const FolderItem = function (props: FolderItemProps) {
 }
 
 // 收藏的视频
-export const VideoFav = function () {
+const VideoFav = function () {
   document.title = `收藏的视频 - ${chrome.runtime.getManifest().name}`
 
   // 包含视频的收藏夹，用于展示
@@ -147,3 +147,5 @@ export const VideoFav = function () {
     </div>
   )
 }
+
+export default VideoFav

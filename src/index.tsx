@@ -6,11 +6,11 @@ import './index.css'
 import Popup from "./pages/popup/Popup"
 import Options from "./pages/options/Options"
 import BiliFav from "./pages/bili_fav"
-import {VideoFav} from "./pages/videos_fav"
-import {HttpHeaders} from "./pages/http_headers"
-import {HotTopics} from "./pages/hot_topics"
-import {ViewV2exTopic} from "./pages/view_topic"
-import {VideoTool} from "./pages/video_tool"
+import VideoFav from "./pages/videos_fav"
+import HttpHeaders from "./pages/http_headers"
+import HotTopics from "./pages/hot_topics"
+import ViewV2exTopic from "./pages/view_topic"
+import VideoTool from "./pages/video_tool"
 import {IPTV} from "./pages/iptv"
 
 ReactDOM.render(

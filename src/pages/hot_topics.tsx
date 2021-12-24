@@ -106,8 +106,11 @@ const TopicItem = function (props: { topic: Topic, history: History }) {
 
       <div className="col width-100per">
         <div className="row">
-          <a className="post-title overflow-hide-line-one" href={topic.url} target="_blank">{topic.title}</a>
-          <Button className="post-extra put-right" title="左击浏览帖子，右击复制链接" type="link" onClick={() => {
+          <a className="posts-title width-fill-remain overflow-hide-line-one" href={topic.url} target="_blank">
+            {topic.title}
+          </a>
+
+          <span className="clickable post-extra margin-h put-right" title="左击浏览，右击复制链接" onClick={() => {
             props.history.push({pathname: "/view_topic", search: `?tid=${topic.id}`})
           }} onContextMenu={e => {
             copyText(document, topic.url)
@@ -116,8 +119,9 @@ const TopicItem = function (props: { topic: Topic, history: History }) {
             e.stopPropagation()
           }}>
             {topic.replies}
-          </Button>
+          </span>
         </div>
+
         <p className="post-description overflow-hide-line-multi lines-2">{topic.content}</p>
       </div>
     </li>
@@ -125,7 +129,7 @@ const TopicItem = function (props: { topic: Topic, history: History }) {
 }
 
 // 浏览热门的帖子列表
-export const HotTopics = function () {
+const HotTopics = function () {
   // 存储帖子列表，用于显示
   const [topics, setTopics] = useState<Array<Topic>>([])
   // 用于页面跳转的 hook
@@ -147,8 +151,12 @@ export const HotTopics = function () {
   }, [])
 
   return (
-    <ul className="border" style={{width: "50%", margin: "0 auto"}}>
-      {topics.map(topic => <TopicItem key={topic.id} topic={topic} history={history}/>)}
-    </ul>
+    <div>
+      <ul className="border" style={{width: "50%", margin: "0 auto", background: "#FFF"}}>
+        {topics.map(topic => <TopicItem key={topic.id} topic={topic} history={history}/>)}
+      </ul>
+    </div>
   )
 }
+
+export default HotTopics

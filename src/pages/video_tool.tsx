@@ -1,5 +1,5 @@
 import {AutoComplete, Button, Input, message} from "antd"
-import React, {useEffect, useRef, useState} from "react"
+import React, {CSSProperties, useEffect, useRef, useState} from "react"
 import {OptionData} from "rc-select/lib/interface"
 import {request} from "do-utils/dist/utils"
 import "./video_tool.css"
@@ -14,54 +14,6 @@ interface SSEMsg {
 
 // SSE 消息服务端地址
 const ADDR = "http://127.0.0.1:8021"
-
-// 视频工具组件
-export const VideoTool = function () {
-  // 本次 SSE 连接的标识
-  const hashRef = useRef(String(Date.now()))
-  // SSE 接收消息的秘钥
-  const sseRef = useRef<EventSource>(new EventSource(`${ADDR}/api/sse?hash=${hashRef.current}`))
-
-  const bindSSE = function () {
-    // 接收消息，成功收到某消息后才开始
-    sseRef.current.onmessage = event => {
-      console.log(`[SSE] ${event.data}`)
-    }
-    // 处理错误
-    sseRef.current.onerror = _ => {
-      if (sseRef.current.readyState === EventSource.CLOSED) {
-        message.info(`[SSE] 已关闭连接`)
-        console.log(`[SSE] 已关闭连接`)
-        return
-      }
-      message.error(`[SSE] 连接服务端出错`)
-      console.log(`[SSE] 连接服务端出错`)
-    }
-  }
-
-  useEffect(() => {
-    document.title = `视频工具 - ${chrome.runtime.getManifest().name}`
-
-    // 和服务端建立 SSE 消息通道
-    // 该请求需要使用 GET 方法，不能使用 POST，所以参数 hash 通过查询字符串提供
-    bindSSE()
-
-    // 每隔 1 分钟发送 SSE 的心跳
-    setInterval(async () => {
-      console.log(`[SSE] 发送心跳`)
-      let resp = await request(`${ADDR}/api/sse/tick`, {hash: hashRef.current})
-      let result = await resp.json()
-      console.log(`[SSE] ${result.msg}`)
-    }, 60 * 1000)
-  }, [])
-
-  return (
-    <div className="row wrap">
-      <Rename sseRef={sseRef} hashRef={hashRef}/>
-      <DlVideo sseRef={sseRef} hashRef={hashRef}/>
-    </div>
-  )
-}
 
 // 重命名的日志项
 const RnLogItem = function (props: { sseMsg: SSEMsg }) {
@@ -87,6 +39,7 @@ const RnLogItem = function (props: { sseMsg: SSEMsg }) {
 const Rename = function (props: {
   sseRef: React.RefObject<EventSource>,
   hashRef: React.MutableRefObject<string>
+  style: CSSProperties
 }) {
   const [working, setWorking] = useState(false)
   const [logs, setLogs] = useState<Array<SSEMsg>>([])
@@ -150,8 +103,7 @@ const Rename = function (props: {
   }
 
   return (
-    <div className="col padding border"
-         style={{width: 400, height: "100vh", overflow: "hidden"}}>
+    <div className="col padding border" style={props.style}>
       <AutoComplete className="width-100per" disabled={working} size="small"
                     options={options} onSelect={onRename}>
         <Input.Search placeholder="目标视频文件夹的路径" enterButton="重命名" size="small" onSearch={onRename}/>
@@ -178,6 +130,7 @@ const DlStatusItem = function (props: { index: number, success: boolean | undefi
 const DlVideo = function (props: {
   sseRef: React.RefObject<EventSource>,
   hashRef: React.MutableRefObject<string>
+  style: CSSProperties
 }) {
   // 输入的视频下载地址
   const videoUrlRef = useRef("")
@@ -288,12 +241,11 @@ const DlVideo = function (props: {
   }
 
   return (
-    <div className="col padding border"
-         style={{width: 400, height: "100vh", overflow: "hidden"}}>
+    <div className="col padding border" style={props.style}>
       <Input.Search placeholder="视频流的地址" disabled={working} enterButton="下载" size="small"
                     onSearch={onDownload}>
       </Input.Search>
-      <div className="row justify-between align-center margin-v">
+      <div className="row justify-between align-center padding border-bottom">
         <span>已下载 {doneRef.current} 个视频，共 {totalRef.current} 个</span>
         <Button onClick={onDLRetry} disabled={disRetry} size="small">重试失败</Button>
       </div>
@@ -305,3 +257,54 @@ const DlVideo = function (props: {
     </div>
   )
 }
+
+// 视频工具组件
+const VideoTool = function () {
+  // 本次 SSE 连接的标识
+  const hashRef = useRef(String(Date.now()))
+  // SSE 接收消息的秘钥
+  const sseRef = useRef<EventSource>(new EventSource(`${ADDR}/api/sse?hash=${hashRef.current}`))
+
+  const bindSSE = function () {
+    // 接收消息，成功收到某消息后才开始
+    sseRef.current.onmessage = event => {
+      console.log(`[SSE] ${event.data}`)
+    }
+    // 处理错误
+    sseRef.current.onerror = _ => {
+      if (sseRef.current.readyState === EventSource.CLOSED) {
+        message.info(`[SSE] 已关闭连接`)
+        console.log(`[SSE] 已关闭连接`)
+        return
+      }
+      message.error(`[SSE] 连接服务端出错`)
+      console.log(`[SSE] 连接服务端出错`)
+    }
+  }
+
+  useEffect(() => {
+    document.title = `视频工具 - ${chrome.runtime.getManifest().name}`
+
+    // 和服务端建立 SSE 消息通道
+    // 该请求需要使用 GET 方法，不能使用 POST，所以参数 hash 通过查询字符串提供
+    bindSSE()
+
+    // 每隔 1 分钟发送 SSE 的心跳
+    setInterval(async () => {
+      console.log(`[SSE] 发送心跳`)
+      let resp = await request(`${ADDR}/api/sse/tick`, {hash: hashRef.current})
+      let result = await resp.json()
+      console.log(`[SSE] ${result.msg}`)
+    }, 60 * 1000)
+  }, [])
+
+  return (
+    <div className="row wrap">
+      <Rename sseRef={sseRef} hashRef={hashRef} style={{width: 400, height: "100vh", background: "#FFF"}}/>
+      <DlVideo sseRef={sseRef} hashRef={hashRef}
+               style={{width: 400, height: "100vh", background: "#FFF", marginLeft: 10}}/>
+    </div>
+  )
+}
+
+export default VideoTool

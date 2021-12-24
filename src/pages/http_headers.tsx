@@ -3,8 +3,26 @@ import {useEffect, useState} from "react"
 
 const {TextArea} = Input
 
+/**
+ * 将数组形式的请求头键值对转换为字符串
+ * @param headers 请求头的数组，如 ["Host: www.hdsay.net", "Connection: keep-alive"]
+ * @returns 如 {"Host": "www.hdsay.net", "Connection": "keep-alive"}
+ */
+const toKV = function (headers: Array<string>) {
+  let obj: { [header: string]: string } = {}
+  for (let header of headers) {
+    let [key, value] = header.split(": ")
+    obj[key.trim()] = value.trim()
+  }
+
+  // 转为字符串
+  let str = JSON.stringify(obj, null, 2)
+  // 去除请求头的值中可能存在的引号而出现的'\"'
+  return str.replaceAll('\\"', "")
+}
+
 // 将请求头转换为指定语言的格式
-export const HttpHeaders = function () {
+const HttpHeaders = function () {
   // 目标语言
   const [lang, setLang] = useState("js")
   // 源请求头的文本
@@ -17,7 +35,7 @@ export const HttpHeaders = function () {
   }, [])
 
   return (
-    <div className="col" style={{height: "100vh", overflow: "hidden", padding: "0 5px"}}>
+    <div className="col" style={{padding: "0 5px", background: "#FFF"}}>
       <div className="row wrap align-center padding-v">
         <Radio.Group value={lang} size="small" onChange={e => setLang(e.target.value)}>
           <Radio value="js">JavaScript</Radio>
@@ -60,7 +78,7 @@ export const HttpHeaders = function () {
           value={dstText}
           placeholder="目标语言请求头"
           rows={25}
-          style={{width: 600}}
+          style={{width: 600, marginLeft: 10}}
           onChange={e => setDstText(e.target.value)}
         />
       </div>
@@ -68,20 +86,4 @@ export const HttpHeaders = function () {
   )
 }
 
-/**
- * 将数组形式的请求头键值对转换为字符串
- * @param headers 请求头的数组，如 ["Host: www.hdsay.net", "Connection: keep-alive"]
- * @returns 如 {"Host": "www.hdsay.net", "Connection": "keep-alive"}
- */
-const toKV = function (headers: Array<string>) {
-  let obj: { [header: string]: string } = {}
-  for (let header of headers) {
-    let [key, value] = header.split(": ")
-    obj[key.trim()] = value.trim()
-  }
-
-  // 转为字符串
-  let str = JSON.stringify(obj, null, 2)
-  // 去除请求头的值中可能存在的引号而出现的'\"'
-  return str.replaceAll('\\"', "")
-}
+export default HttpHeaders

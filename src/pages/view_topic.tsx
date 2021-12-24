@@ -6,30 +6,6 @@ import {date} from "do-utils"
 import {message} from "antd"
 import {request} from "do-utils/dist/utils"
 
-// 查看帖子
-// 可通过查询字符串传递参数："?tid=123456"
-export const ViewV2exTopic = function () {
-  // 用于设置帖子的发布者，用于在回复列表中标识为“楼主”
-  let authorIDRef = useRef(0)
-
-  // 读取当前 URL的 query string 参数
-  const location = useLocation()
-  const params = new URLSearchParams(location.search)
-  // 获取帖子的 ID：优先从参数中获取
-  let tid = params.get("tid") || ""
-
-  useEffect(() => {
-    document.title = `查看帖子 - ${chrome.runtime.getManifest().name}`
-  }, [])
-
-  return (
-    <div className="border" style={{width: "50%", margin: "0 auto"}}>
-      <Content tid={tid} authorIDRef={authorIDRef}/>
-      <Repies tid={tid} authorIDRef={authorIDRef}/>
-    </div>
-  )
-}
-
 // 帖子的标题、内容
 const Content = function (props: { tid: string, authorIDRef: React.MutableRefObject<number> }) {
   const [topic, setTopic] = useState<Topic | null>()
@@ -56,12 +32,12 @@ const Content = function (props: { tid: string, authorIDRef: React.MutableRefObj
   }
 
   return (
-    <div className="col padding">
+    <div className="col">
       <div className="row justify-between">
         <img className="avatar-medium margin" src={topic.member.avatar_large}/>
 
         <div className="col width-100per">
-          <a className="post-title" href={topic.url} target="_blank">{topic.title}</a>
+          <a className="posts-title" href={topic.url} target="_blank">{topic.title}</a>
 
           <div className="row justify-between width-100per">
             <a className="post-extra" href={topic.member.url} target="_blank">{topic.member.username}</a>
@@ -74,7 +50,8 @@ const Content = function (props: { tid: string, authorIDRef: React.MutableRefObj
         </div>
       </div>
       {topic.content_rendered &&
-      <div className="post-content padding-v" dangerouslySetInnerHTML={{__html: topic.content_rendered}}/>
+        <div className="posts-content" style={{marginLeft: 37}}
+             dangerouslySetInnerHTML={{__html: topic.content_rendered}}/>
       }
     </div>
   )
@@ -93,7 +70,7 @@ const ReplyItem = function (props: { reply: Reply, index: number, authorID: numb
             <span>
               <a className="post-extra" href={reply.member.url} target="_blank">{reply.member.username}</a>
               {reply.member.id === props.authorID &&
-              <span className="is-marked margin-h">[楼主]</span>
+                <span className="is-marked margin-h">[楼主]</span>
               }
             </span>
 
@@ -103,7 +80,7 @@ const ReplyItem = function (props: { reply: Reply, index: number, authorID: numb
             </div>
           </div>
 
-          <div className="post-content" dangerouslySetInnerHTML={{__html: reply.content_rendered}}/>
+          <div className="posts-title" dangerouslySetInnerHTML={{__html: reply.content_rendered}}/>
         </div>
       </div>
     </li>
@@ -134,9 +111,37 @@ const Repies = function (props: { tid: string, authorIDRef: React.MutableRefObje
 
   return (
     <ul>
-      {replies.map(reply => <ReplyItem key={reply.id} reply={reply} index={reply.floor}
-                                       authorID={props.authorIDRef.current}/>)
+      {replies.map(reply =>
+        <ReplyItem key={reply.id} reply={reply} index={reply.floor} authorID={props.authorIDRef.current}/>)
       }
     </ul>
   )
 }
+
+// 查看帖子
+// 可通过查询字符串传递参数："?tid=123456"
+const ViewV2exTopic = function () {
+  // 用于设置帖子的发布者，用于在回复列表中标识为“楼主”
+  let authorIDRef = useRef(0)
+
+  // 读取当前 URL的 query string 参数
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  // 获取帖子的 ID：优先从参数中获取
+  let tid = params.get("tid") || ""
+
+  useEffect(() => {
+    document.title = `查看帖子 - ${chrome.runtime.getManifest().name}`
+  }, [])
+
+  return (
+    <div>
+      <div className="border" style={{width: "50%", margin: "0 auto", background: "#FFF"}}>
+        <Content tid={tid} authorIDRef={authorIDRef}/>
+        <Repies tid={tid} authorIDRef={authorIDRef}/>
+      </div>
+    </div>
+  )
+}
+
+export default ViewV2exTopic

@@ -105,7 +105,7 @@ const VideoItem = function (props: VideoItemProps) {
             }}>UP：{props.upper.name}</div>
           </div>
         </div>
-        <div title={props.intro} className="post-description"
+        <div title={props.intro} className="posts-content"
              style={{lineHeight: "1.8em", maxHeight: "3.6em", overflow: "hidden"}}>
           {props.title !== "已失效视频" ? props.title : props.intro}
         </div>
