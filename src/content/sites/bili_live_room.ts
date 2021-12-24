@@ -4,10 +4,42 @@ import {sleep} from "do-utils"
 
 const TAG = "[BL_LIVE]"
 
+// 禁止偶尔弹出当前的分区排名
+// 参考：https://stackoverflow.com/a/52048042/8179418
+const banHotRank = function () {
+  //create callback function to execute when changes are observed
+  let banFun = function (records: MutationRecord[]) {
+    let iframes = (records[0].target as HTMLElement).querySelectorAll("iframe")
+    if (iframes.length <= 1) {
+      return
+    }
+
+    let iframe = iframes[1]
+    // 分区排名的URL如"https://live.bilibili.com/p/html/live-app-hotrank/result.html"
+    if (iframe.src.indexOf("live-app-hotrank") >= 0) {
+      console.log(TAG, "已屏蔽弹窗：当前的分区排名")
+      iframe.style.display = "none"
+    }
+  }
+
+  //Create an observer instance linked to the callback function
+  let observer = new MutationObserver(banFun)
+
+  // Start observing the target node for configured mutations(changes)
+  observer.observe(document.body, {attributes: true, childList: true, subtree: false})
+
+  // Later, you can stop observing
+  //observer.disconnect();
+}
+
 // 更改聊天列表、输入框的样式
 // 添加按空格键暂停、播放
 const deal = async function () {
   console.log(TAG, "即将改进直播间的功能")
+  // 禁止偶尔弹出当前的分区排名
+  banHotRank()
+
+  // 排名面板
   let rankPanel
   let chatPanel
   let chatInput

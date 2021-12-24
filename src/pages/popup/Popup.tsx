@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {Button} from "antd"
+import {Button, Space} from "antd"
 
 const Popup = function () {
   useEffect(() => {
@@ -7,35 +7,35 @@ const Popup = function () {
   }, [])
 
   return (
-    <div className="col" style={{backgroundColor: "#FFF"}}>
-      <Button type="link" onClick={() =>
+    <Space direction="vertical" style={{width: 80, padding: 5}}>
+      <span className="clickable" onClick={() =>
         chrome.tabs.create({url: "/index.html#/hot_topics"})}>热帖
-      </Button>
+      </span>
 
-      <Button type="link" onClick={() =>
+      <span className="clickable" onClick={() =>
         chrome.tabs.create({url: "/index.html#/bili_video"})}>哔哩视频
-      </Button>
+      </span>
 
-      <Button type="link" onClick={() =>
-        chrome.tabs.create({url: "/index.html#/video_fav"})}>收藏的视频
-      </Button>
+      <span className="clickable" onClick={() =>
+        chrome.tabs.create({url: "/index.html#/video_fav"})}>视频收藏
+      </span>
 
-      <Button type="link" onClick={() =>
-        chrome.tabs.create({url: "/index.html#/http_headers"})}>转换请求头
-      </Button>
+      <span className="clickable" onClick={() =>
+        chrome.tabs.create({url: "/index.html#/http_headers"})}>转请求头
+      </span>
 
-      <Button type="link" onClick={() =>
+      <span className="clickable" onClick={() =>
         chrome.tabs.create({url: "/index.html#/video_tool"})}>视频工具
-      </Button>
+      </span>
 
-      <Button type="link" onClick={() =>
-        chrome.tabs.create({url: "/index.html#/iptv"})}>IPTV
-      </Button>
+      <span className="clickable" onClick={() =>
+        chrome.tabs.create({url: "/index.html#/iptv"})}>IPTV源
+      </span>
 
-      <Button type="link" onClick={() =>
+      <span className="clickable" onClick={() =>
         chrome.tabs.create({url: "/index.html#/options"})}>选项
-      </Button>
-    </div>
+      </span>
+    </Space>
   )
 }
 
