@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Slider, Space, Tag} from "antd"
+import {Slider, Space} from "antd"
 import Icon from '@ant-design/icons'
 import {ReactComponent as IconVolume} from "../../icons/volume.svg"
 import {ReactComponent as IconHot} from "../../icons/hot.svg"
@@ -11,21 +11,25 @@ import {ReactComponent as IconTV} from "../../icons/tv.svg"
 import {ReactComponent as IconStatus} from "../../icons/status.svg"
 import {ReactComponent as IconOptions} from "../../icons/options.svg"
 
+// 弹窗
 const Popup = function () {
   // 音量增强值
   const [volumeEnhance, setVomumeEnhance] = useState(1)
+
+  // 消息接收器，用于变更音量增强
+  const onMsgVolEnhance = function (message: any) {
+    if (message.cmd === "volumeEnhance") {
+      // 当 volumeEnhanceValue为 -1 时表示在当前页面中没有找到媒体元素，
+      console.log("收到消息，设置音量增强值：", message.volumeEnhanceValue)
+      setVomumeEnhance(message.volumeEnhanceValue)
+    }
+  }
 
   useEffect(() => {
     document.title = `弹出框 - ${chrome.runtime.getManifest().name}`
 
     // 接收当前页面的媒体元素的音量增强值
-    chrome.runtime.onMessage.addListener(message => {
-      if (message.cmd === "volumeEnhance") {
-        // 当 volumeEnhanceValue为 -1 时表示在当前页面中没有找到媒体元素，
-        console.log("收到消息，设置音量增强值：", message.volumeEnhanceValue)
-        setVomumeEnhance(message.volumeEnhanceValue)
-      }
-    })
+    chrome.runtime.onMessage.addListener(onMsgVolEnhance)
 
     // 让当前页面的内容脚本发送媒体元素的音量增强值
     chrome.tabs.query({active: true, currentWindow: true}).then(async ([tab]) => {
@@ -33,17 +37,24 @@ const Popup = function () {
         return
       }
       // 引入脚本
-      await chrome.scripting.executeScript({
-        target: {tabId: tab.id},
-        files: ["/scripts/volume_enhance.js"]
-      })
+      chrome.scripting.executeScript({target: {tabId: tab.id}, files: ["/scripts/volume_enhance.js"]},
+        _ => {
+          if (chrome.runtime.lastError) {
+            console.log("不可访问内部网页")
+            setVomumeEnhance(-1)
+            return
+          }
 
-      chrome.scripting.executeScript({
-        target: {tabId: tab.id},
-        // @ts-ignore
-        func: () => window.enhanceVolume()
-      })
+          chrome.scripting.executeScript({
+            // @ts-ignore
+            target: {tabId: tab.id},
+            // @ts-ignore
+            func: () => window.enhanceVolume()
+          })
+        })
     })
+
+    return chrome.runtime.onMessage.removeListener(onMsgVolEnhance)
   }, [])
 
   return (
