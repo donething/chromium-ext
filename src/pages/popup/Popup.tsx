@@ -90,12 +90,12 @@ const Popup = function () {
         <Icon component={IconVideo}/> 视频收藏
       </span>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}>
-        <Icon component={IconHeaders}/> 转请求头
-      </span>
-
       <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/video_tool"})}>
         <Icon component={IconVideoTool}/> 视频工具
+      </span>
+
+      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}>
+        <Icon component={IconHeaders}/> 转请求头
       </span>
 
       <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}>

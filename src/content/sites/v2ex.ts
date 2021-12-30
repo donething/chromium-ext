@@ -43,7 +43,7 @@ const V2ex = {
     document.styleSheets[0].insertRule(".item_title a.topic-link:link {color: black}")
 
     // 点击帖子右侧（回复数地位置）时，在扩展中强行浏览该帖子
-    document.querySelectorAll(".box .item tbody tr").forEach(e => {
+    document.querySelectorAll(".box tbody tr").forEach(e => {
       let target = e.lastElementChild as HTMLElement
       // 改变为手型指针
       target.style.cursor = "pointer"
