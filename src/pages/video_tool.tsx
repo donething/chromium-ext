@@ -1,4 +1,4 @@
-import {AutoComplete, Button, Input, message} from "antd"
+import {AutoComplete, Button, Input, message, Space} from "antd"
 import React, {CSSProperties, useEffect, useRef, useState} from "react"
 import {OptionData} from "rc-select/lib/interface"
 import {request} from "do-utils/dist/utils"
@@ -12,7 +12,7 @@ interface SSEMsg {
   data: any
 }
 
-// SSE 消息服务端地址
+// 服务端地址
 const ADDR = "http://127.0.0.1:8021"
 
 // 重命名的日志项
@@ -115,6 +115,57 @@ const Rename = function (props: {
     </div>
   )
 }
+
+// 查找本地字幕文件
+const Subtitle = function (props: { style: CSSProperties }): JSX.Element {
+  const [paths, setPaths] = useState<Array<string>>([])
+  const [working, setWorking] = useState(false)
+
+  const onQuery = async function (value: string) {
+    setWorking(true)
+
+    let url = `${ADDR}/api/fanhao/subtitle`
+    let resp = await request(url, {fanhao: value})
+    let result = await resp.json()
+
+    // 查找出错
+    if (result["errcode"] !== 0) {
+      console.log("查找字幕出错：", resp.text)
+      message.warn(`查找字幕出错：${result.msg}`)
+      setWorking(false)
+      return
+    }
+
+    // 赋值以填充界面
+    if (result.data && result.data.length >= 1) {
+      setPaths(result.data)
+      setWorking(false)
+    }
+  }
+
+  return (
+    <div className="col padding border" style={props.style}>
+      <Input.Search placeholder="视频流的地址" disabled={working} enterButton="查找字幕" size="small"
+                    onSearch={onQuery}>
+      </Input.Search>
+
+      <ul className="col scrollable">
+        {paths.map(path =>
+          <li className="clickable padding overflow-hide-line-one" title={path} onClick={() => {
+            chrome.runtime.sendMessage({
+              cmd: "cors",
+              url: `${ADDR}/api/openfile`,
+              data: {method: "show", path: path}
+            })
+          }}>{path.indexOf("/") >= 0 ? path.substring(path.lastIndexOf("/") + 1) :
+            path.indexOf("\\") >= 0 ? path.substring(path.lastIndexOf("\\") + 1) : path}
+          </li>
+        )}
+      </ul>
+    </div>
+  )
+}
+
 
 // 下载流视频的状态项
 const DlStatusItem = function (props: { index: number, success: boolean | undefined, url: string }) {
@@ -299,11 +350,11 @@ const VideoTool = function () {
   }, [])
 
   return (
-    <div className="row wrap">
+    <Space direction="horizontal">
+      <Subtitle style={{width: 400, height: "100vh", background: "#FFF"}}/>
       <Rename sseRef={sseRef} hashRef={hashRef} style={{width: 400, height: "100vh", background: "#FFF"}}/>
-      <DlVideo sseRef={sseRef} hashRef={hashRef}
-               style={{width: 400, height: "100vh", background: "#FFF", marginLeft: 10}}/>
-    </div>
+      <DlVideo sseRef={sseRef} hashRef={hashRef} style={{width: 400, height: "100vh", background: "#FFF"}}/>
+    </Space>
   )
 }
 

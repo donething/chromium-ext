@@ -50,14 +50,15 @@ const Javlib = {
         if (result["errcode"] !== 0) {
           console.log(this.TAG, "查找字幕出错：", resp.text)
           showMsg(`查找字幕出错：${result.msg}`, Msg.error)
+          return
         }
 
-        // 存在 data 表示本地存在其字幕文件，将在资源管理器中显示
-        if (result.data) {
+        // data 为字幕数组，存在 data 表示本地存在其字幕文件，将在资源管理器中显示其中第一个字幕文件
+        if (result.data && result.data.length >= 1) {
           chrome.runtime.sendMessage({
             cmd: "cors",
             url: `${this.host}/api/openfile`,
-            data: {method: "show", path: result.data}
+            data: {method: "show", path: result.data[0]}
           })
         } else {
           // 没有在本地找到字幕，打开 Google 查找
