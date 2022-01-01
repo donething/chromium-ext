@@ -137,10 +137,13 @@ const Subtitle = function (props: { style: CSSProperties }): JSX.Element {
     }
 
     // 赋值以填充界面
-    if (result.data && result.data.length >= 1) {
+    if (result.data.length >= 1) {
       setPaths(result.data)
-      setWorking(false)
+    } else {
+      message.info("没有找到字幕文件")
     }
+
+    setWorking(false)
   }
 
   return (
