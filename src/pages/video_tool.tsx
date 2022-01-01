@@ -145,7 +145,7 @@ const Subtitle = function (props: { style: CSSProperties }): JSX.Element {
 
   return (
     <div className="col padding border" style={props.style}>
-      <Input.Search placeholder="视频流的地址" disabled={working} enterButton="查找字幕" size="small"
+      <Input.Search placeholder="需要搜索的关键字" disabled={working} enterButton="查找字幕" size="small"
                     onSearch={onQuery}>
       </Input.Search>
 
