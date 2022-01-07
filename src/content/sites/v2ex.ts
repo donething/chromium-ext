@@ -24,7 +24,7 @@ const V2ex = {
   TAG: "[V2ex]",
 
   // 此帖的所有回复
-  allReplies: <Array<Reply>>[],
+  allReplies: [] as Array<Reply>,
 
   // 对话列表的弹出层
   commsDiv: document.createElement("div") as HTMLElement,
@@ -118,14 +118,6 @@ const V2ex = {
   // 2. 点击会话框上的楼层，在原网页中跳转
   initCommsPanel: async function () {
     console.log(this.TAG, "扩展功能：1.筛选、显示 @TA 的回复或 TA 的回复；2.点击会话框上的楼层，在原网页中跳转")
-    // 帖子的发布者（楼主）
-    let topicAuthorElem = document.querySelector(".header small a") as HTMLElement
-    if (!topicAuthorElem) {
-      console.log(this.TAG, "无法解析出楼主，不是帖子的详情页面，退出处理回复")
-      showMsg("无法解析出楼主，退出处理回复", Msg.warning)
-      return
-    }
-    let topicAuthor = topicAuthorElem.textContent
 
     // 添加回复列表的弹出层
     this.initPopupDiv()
@@ -140,19 +132,8 @@ const V2ex = {
 
     // 迭代当前页面的所有回复的元素，添加功能
     for (let item of document.querySelectorAll(".reply_content")) {
-      // 当前回复的发布者（层主）
-      // @ts-ignore
-      let author = item.closest("td").querySelector("strong a").innerText
       // 当前回复的层主所在的HTML节点（精确到<strong>，而不是更精确的<a>）
-      // @ts-ignore
-      let authorElem = item.closest("td").querySelector("strong")
-      // 楼主回复的帖子，特殊标记
-      let authorTagElem = document.createElement("span")
-      authorTagElem.innerText = " [楼主]"
-      if (author === topicAuthor) {
-        authorTagElem.style.color = "#008000"
-        authorElem?.appendChild(authorTagElem)
-      }
+      let authorElem = item.closest("td")?.querySelector("strong")
 
       // 添加 显示回复者在本帖内的所有回复、本帖内@该回复者的所有回复的按钮
       let bnStr = "<a href='#' class='thank' data-show-replies='{type}' style='margin-right: 15px;'>{text}</a>"
@@ -331,6 +312,7 @@ const V2ex = {
  * @see https://blog.csdn.net/qq_23616601/article/details/77481516
  */
 // @ts-ignore
+// eslint-disable-next-line no-extend-native
 String.prototype.format = function (args: Array<string>) {
   if (arguments.length === 0) return this
   let param = arguments[0]
