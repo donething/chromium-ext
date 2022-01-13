@@ -35,37 +35,44 @@ const Javlib = {
 <td class='text genre'><a href='#' target='_blank' id="sht">SeHuaT</a></td>
 <td class='text genre'><a href='https://www.google.com/search?q=site:t66y.com ${fanhao}' target='_blank'>T66y</a></td>
 <td class='text genre'><a href='https://cn.bt4g.org/search/${fanhao}' target='_blank'>BT4G</a></td>
-<td class='text genre'><a href='javascript:void(0);' id='querySubtitle'>Subtitle</a></td>
+<td class='text genre'><a href='javascript:void(0);' id='querySubtitle' data-path="">Subtitle</a></td>
 </tr></table></div>`))
 
-    // 点击字幕扩展按钮后开始查找字幕
+    // 字幕按钮
     let querySubtitleElem = document.querySelector("#querySubtitle") as HTMLElement
+    // 如果存在字幕，点击打开文件夹
     querySubtitleElem.onclick = () => {
-      // 提取绑定的番号数据
-      let url = `${this.host}/api/fanhao/subtitle`
-      let msg = {cmd: "cors", url: url, data: {fanhao: fanhao}}
-      chrome.runtime.sendMessage(msg, resp => {
-        let result = JSON.parse(resp.text)
-        // 出错了
-        if (result["errcode"] !== 0) {
-          console.log(this.TAG, "查找字幕出错：", resp.text)
-          showMsg(`查找字幕出错：${result.msg}`, Msg.error)
-          return
-        }
-
-        // data 为字幕数组，存在 data 表示本地存在其字幕文件，将在资源管理器中显示其中第一个字幕文件
-        if (result.data && result.data.length >= 1) {
-          chrome.runtime.sendMessage({
-            cmd: "cors",
-            url: `${this.host}/api/openfile`,
-            data: {method: "show", path: result.data[0]}
-          })
-        } else {
-          // 没有在本地找到字幕，打开 Google 查找
-          window.open(`https://www.google.com/search?q=${fanhao} (ass|srt)`, "_blank")
-        }
-      })
+      if (querySubtitleElem.dataset.path) {
+        chrome.runtime.sendMessage({
+          cmd: "cors",
+          url: `${this.host}/api/openfile`,
+          data: {method: "show", path: querySubtitleElem.dataset.path}
+        })
+      } else {
+        // 没有在本地找到字幕，打开 Google 查找
+        window.open(`https://www.google.com/search?q=${fanhao} (ass|srt)`, "_blank")
+      }
     }
+
+    // 查询本地是否存在字幕
+    let url = `${this.host}/api/fanhao/subtitle`
+    let msg = {cmd: "cors", url: url, data: {fanhao: fanhao}}
+    chrome.runtime.sendMessage(msg, resp => {
+      let result = JSON.parse(resp.text)
+      // 出错了
+      if (result["errcode"] !== 0) {
+        console.log(this.TAG, "查找字幕出错：", resp.text)
+        showMsg(`查找字幕出错：${result.msg}`, Msg.error)
+        return
+      }
+
+      // data 为字幕数组，存在 data 表示本地存在其字幕文件，并将第一个字幕文件设为路径，以供打开文件夹
+      if (result.data && result.data.length >= 1) {
+        querySubtitleElem.dataset.path = result.data[0]
+        querySubtitleElem.title = "本地存在字幕，点击打开文件夹"
+        querySubtitleElem.style.color = "#008800"
+      }
+    })
 
     // 如果本地存在影片，则将右侧番号变色以标识
     // 番号详情页，只传递一个键值对
