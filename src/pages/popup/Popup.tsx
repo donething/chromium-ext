@@ -16,20 +16,34 @@ const Popup = function () {
   // 音量增强值
   const [volumeEnhance, setVomumeEnhance] = useState(1)
 
-  // 消息接收器，用于变更音量增强
-  const onMsgVolEnhance = function (message: any) {
-    if (message.cmd === "volumeEnhance") {
-      // 当 volumeEnhanceValue为 -1 时表示在当前页面中没有找到媒体元素，
-      console.log("收到消息，设置音量增强值：", message.volumeEnhanceValue)
-      setVomumeEnhance(message.volumeEnhanceValue)
-    }
+  // 设置音量增强值
+  // 来源有3个：来自内容脚本消息中的音量增强值、滑动增强滑块的值、点击图标恢复默认值
+  const updateVolEnhance = (v: number) => {
+    setVomumeEnhance(v)
+    chrome.tabs.query({active: true, currentWindow: true}).then(([tab]) => {
+      if (!tab.id) {
+        return
+      }
+      chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        // @ts-ignore
+        func: (volEn) => window.enhanceVolume(volEn),
+        args: [v]
+      })
+    })
   }
 
   useEffect(() => {
     document.title = `弹出框 - ${chrome.runtime.getManifest().name}`
 
     // 接收当前页面的媒体元素的音量增强值
-    chrome.runtime.onMessage.addListener(onMsgVolEnhance)
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.cmd === "volumeEnhance") {
+        // 当 volumeEnhanceValue为 -1 时表示在当前页面中没有找到媒体元素，
+        console.log("[Pop] 收到消息，设置音量增强值：", message.volumeEnhanceValue)
+        updateVolEnhance(message.volumeEnhanceValue)
+      }
+    })
 
     // 让当前页面的内容脚本发送媒体元素的音量增强值
     chrome.tabs.query({active: true, currentWindow: true}).then(async ([tab]) => {
@@ -40,7 +54,7 @@ const Popup = function () {
       chrome.scripting.executeScript({target: {tabId: tab.id}, files: ["/scripts/volume_enhance.js"]},
         _ => {
           if (chrome.runtime.lastError) {
-            console.log("不可访问内部网页")
+            console.log("[Pop] 不可访问内部网页")
             setVomumeEnhance(-1)
             return
           }
@@ -54,28 +68,16 @@ const Popup = function () {
         })
     })
 
-    return chrome.runtime.onMessage.removeListener(onMsgVolEnhance)
+    // 不能返回取消接收器，会导致收不到消息
+    // return chrome.runtime.onMessage.removeListener(onVolEnhance)
   }, [])
 
   return (
     <Space direction="vertical" style={{width: 100, padding: 5}}>
       <span className="row align-center">
-        <Icon component={IconVolume}/>
+        <Icon title="恢复为默认增强值 1" component={IconVolume} onClick={() => updateVolEnhance(1)}/>
         <Slider className="width-fill-remain margin-h-large" min={0} max={10} step={0.1} value={volumeEnhance}
-                disabled={volumeEnhance === -1} onChange={v => {
-          setVomumeEnhance(v)
-          chrome.tabs.query({active: true, currentWindow: true}).then(([tab]) => {
-            if (!tab.id) {
-              return
-            }
-            chrome.scripting.executeScript({
-              target: {tabId: tab.id},
-              // @ts-ignore
-              func: (volEn) => window.enhanceVolume(volEn),
-              args: [volumeEnhance]
-            })
-          })
-        }}/>
+                disabled={volumeEnhance === -1} onChange={v => updateVolEnhance(v)}/>
       </span>
 
       <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/hot_topics"})}>

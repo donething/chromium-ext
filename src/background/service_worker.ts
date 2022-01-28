@@ -8,8 +8,8 @@ import {initCtxMenu} from "./contextmenus"
  * @see https://stackoverflow.com/a/45092821
  */
 chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
-  console.log("runtime.onMessage 收到消息", req)
-  switch (req.cmd.toLowerCase()) {
+  console.log("[SW] 收到消息：", req)
+  switch (req.cmd) {
     // 接收需要弹出通知的消息
     // 发送消息需要传递的参数，如：
     // chrome.runtime.sendMessage({cmd: "notification", options: options, callbacks: callbacks})
@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
 
     // 没有匹配到 cmd 时
     default:
-      console.log("未知的操作", req)
+      console.log("[SW] 未知的消息", req)
   }
 })
 
@@ -69,4 +69,3 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.runtime.onInstalled.addListener(() => {
   initCtxMenu()
 })
-
