@@ -12,7 +12,7 @@ import {ReactComponent as IconStatus} from "../../icons/status.svg"
 import {ReactComponent as IconOptions} from "../../icons/options.svg"
 
 // 弹窗
-const Popup = function () {
+const Popup = function (): JSX.Element {
   // 音量增强值
   const [volumeEnhance, setVomumeEnhance] = useState(1)
 
@@ -36,14 +36,17 @@ const Popup = function () {
   useEffect(() => {
     document.title = `弹出框 - ${chrome.runtime.getManifest().name}`
 
-    // 接收当前页面的媒体元素的音量增强值
-    chrome.runtime.onMessage.addListener((message) => {
+    // 接收内容脚本发送过来的音量增强消息
+    const onVolEnhance = (message: any) => {
       if (message.cmd === "volumeEnhance") {
         // 当 volumeEnhanceValue为 -1 时表示在当前页面中没有找到媒体元素，
         console.log("[Pop] 收到消息，设置音量增强值：", message.volumeEnhanceValue)
         updateVolEnhance(message.volumeEnhanceValue)
       }
-    })
+    }
+
+    // 接收当前页面的媒体元素的音量增强值
+    chrome.runtime.onMessage.addListener(onVolEnhance)
 
     // 让当前页面的内容脚本发送媒体元素的音量增强值
     chrome.tabs.query({active: true, currentWindow: true}).then(async ([tab]) => {
@@ -68,8 +71,10 @@ const Popup = function () {
         })
     })
 
-    // 不能返回取消接收器，会导致收不到消息
-    // return chrome.runtime.onMessage.removeListener(onVolEnhance)
+    // 卸载组件时取消消息接收器，避免多次接收相同的消息
+    return () => {
+      chrome.runtime.onMessage.removeListener(onVolEnhance)
+    }
   }, [])
 
   return (
