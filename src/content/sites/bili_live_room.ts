@@ -1,6 +1,7 @@
 // 扩展哔哩哔哩直播间的功能
 
 import {sleep} from "do-utils"
+import {isInputElem} from "../../comm/utils"
 
 const TAG = "[BL_LIVE]"
 
@@ -83,8 +84,8 @@ const deal = async function () {
 
   // 按空格键暂停、播放
   console.log(TAG, "按空格键可暂停、播放")
-  let fun = (event: KeyboardEvent) => {
-    if (event.code === "Space") {
+  let videoEvent = (event: KeyboardEvent) => {
+    if (event.code === "Space" && !isInputElem(event.target as HTMLElement)) {
       let frames = document.querySelectorAll("iframe")
       doc = frames.length <= 1 ? document : frames[1].contentDocument
       let video = doc?.querySelector("video")
@@ -99,8 +100,9 @@ const deal = async function () {
       return false
     }
   }
-  doc?.addEventListener("keydown", fun, true)
-  document.addEventListener("keydown", fun, true)
+  // 获取 video 元素略复杂，所以选择监听 document 对象
+  doc?.addEventListener("keydown", videoEvent, true)
+  document.addEventListener("keydown", videoEvent, true)
 
   console.log(TAG, "已完成添加功能")
 }

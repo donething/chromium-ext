@@ -6,6 +6,7 @@
 
 import {elemOf, Msg, sec, showMsg, waitForElem} from "do-utils"
 import {request} from "do-utils/dist/utils"
+import {isInputElem} from "../../../comm/utils"
 
 // typescript 向内置对象声明属性
 declare global {
@@ -175,8 +176,12 @@ export abstract class VideoBase {
 
     // 快捷键：方向键快进、快退、播放暂停
     window.addEventListener("keydown", e => {
+      if (isInputElem(e.target as HTMLElement)) {
+        return
+      }
+
       let v = this.$("video") as HTMLVideoElement
-      switch (e.key) {
+      switch (e.code) {
         // 左方向键：快退
         case "ArrowLeft":
           v.currentTime = v.currentTime - this.step
@@ -190,7 +195,7 @@ export abstract class VideoBase {
           e.stopImmediatePropagation()
           break
         // 空格键：暂停
-        case " ":
+        case "Space":
           v.paused ? v.play() : v.pause()
           e.preventDefault()
           e.stopImmediatePropagation()
