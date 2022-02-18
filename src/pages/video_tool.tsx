@@ -21,10 +21,9 @@ const RnLogItem = function (props: { sseMsg: SSEMsg }) {
   return (
     <li className="padding-v border-bottom" style={{fontSize: "smaller"}}>
       <span style={{fontWeight: "bold"}}>{`${props.sseMsg.msg}：`}</span>
-      <span title={`点击播放 "${path}"`} className={`${props.sseMsg.success ? "clickable" : 'focus-text'}`}
+      <span title={`点击播放 "${path}"`} className={`clickable ${props.sseMsg.success ? "" : 'focus-text'}`}
             onClick={async () => {
               // 请求后台服务显示文件
-              if (!props.sseMsg.success) return
               let resp = await request(`${ADDR}/api/openfile`, {method: "open", path: path})
               let result = await resp.json()
               if (result.errcode !== 0) {
