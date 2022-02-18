@@ -20,6 +20,10 @@ const Popup = function (): JSX.Element {
   // 来源有3个：来自内容脚本消息中的音量增强值、滑动增强滑块的值、点击图标恢复默认值
   const updateVolEnhance = (v: number) => {
     setVomumeEnhance(v)
+    // 如果从内容脚本传来不存在媒体元素的(即值为 -1)，则不需要对其设置音量增强，直接返回
+    if (v === -1) {
+      return
+    }
     chrome.tabs.query({active: true, currentWindow: true}).then(([tab]) => {
       if (!tab.id) {
         return
@@ -54,7 +58,10 @@ const Popup = function (): JSX.Element {
         return
       }
       // 引入脚本
-      chrome.scripting.executeScript({target: {tabId: tab.id}, files: ["/scripts/volume_enhance.js"]},
+      chrome.scripting.executeScript({
+          target: {tabId: tab.id},
+          files: ["/scripts/volume_enhance.js"]
+        },
         _ => {
           if (chrome.runtime.lastError) {
             console.log("[Pop] 不可访问内部网页")

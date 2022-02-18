@@ -14,19 +14,8 @@ if (typeof window.enhanceVolume !== "function") {
     };
 
     // 查找媒体元素
-    // 先在首层document中查找媒体元素
-    let media = findLargestPlayingVideo(document) || document.querySelector("audio");
-    if (!media) {
-      // 首层没有找到时，从iframe中查找
-      let iframes = document.querySelectorAll("iframe");
-      for (const f of iframes) {
-        media = findLargestPlayingVideo(f.contentWindow.document) || document.querySelector("audio");
-        // 已找到，退出查找
-        if (media) {
-          break;
-        }
-      }
-    }
+    let media = findVideo(document)
+      || document.querySelector("audio");
 
     // 最终都没有找到媒体元素时，退出执行
     if (!media) {
