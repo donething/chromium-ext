@@ -280,6 +280,11 @@ hr {
   overflow: auto;
 }
 
+.scrollable-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /* 行布局中：该元素占一半的宽度（需为"row"容器的子元素） */
 .half {
   /* 元素可缩放 */

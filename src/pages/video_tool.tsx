@@ -151,16 +151,20 @@ const Subtitle = function (props: { style: CSSProperties }): JSX.Element {
                     onSearch={onQuery}>
       </Input.Search>
 
-      <ul className="col scrollable">
+      <ul className="col scrollable-y">
         {paths.map(path =>
-          <li className="clickable padding overflow-hide-line-one" title={path} onClick={() => {
-            chrome.runtime.sendMessage({
-              cmd: "cors",
-              url: `${ADDR}/api/openfile`,
-              data: {method: "show", path: path}
-            })
-          }}>{path.indexOf("/") >= 0 ? path.substring(path.lastIndexOf("/") + 1) :
-            path.indexOf("\\") >= 0 ? path.substring(path.lastIndexOf("\\") + 1) : path}
+          <li>
+            <Button type="text" title={path} onClick={() => {
+              chrome.runtime.sendMessage({
+                cmd: "cors",
+                url: `${ADDR}/api/openfile`,
+                data: {method: "show", path: path}
+              })
+            }}>
+              {// 提取文件名
+                path.indexOf("/") >= 0 ? path.substring(path.lastIndexOf("/") + 1) :
+                  path.indexOf("\\") >= 0 ? path.substring(path.lastIndexOf("\\") + 1) : path}
+            </Button>
           </li>
         )}
       </ul>
@@ -353,9 +357,9 @@ const VideoTool = function () {
 
   return (
     <Space direction="horizontal">
-      <Subtitle style={{width: 400, height: "100vh", background: "#FFF"}}/>
-      <Rename sseRef={sseRef} hashRef={hashRef} style={{width: 400, height: "100vh", background: "#FFF"}}/>
-      <DlVideo sseRef={sseRef} hashRef={hashRef} style={{width: 400, height: "100vh", background: "#FFF"}}/>
+      <Subtitle style={{width: 350, height: "100vh", background: "#FFF"}}/>
+      <Rename sseRef={sseRef} hashRef={hashRef} style={{width: 350, height: "100vh", background: "#FFF"}}/>
+      <DlVideo sseRef={sseRef} hashRef={hashRef} style={{width: 350, height: "100vh", background: "#FFF"}}/>
     </Space>
   )
 }
