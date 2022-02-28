@@ -11,15 +11,21 @@ import {ReactComponent as IconTV} from "../../icons/tv.svg"
 import {ReactComponent as IconStatus} from "../../icons/status.svg"
 import {ReactComponent as IconOptions} from "../../icons/options.svg"
 
+declare global {
+  interface Window {
+    enhanceVolume: (volEn?: number) => void
+  }
+}
+
 // 弹窗
 const Popup = function (): JSX.Element {
   // 音量增强值
-  const [volumeEnhance, setVomumeEnhance] = useState(1)
+  const [volEnValue, setVolEnValue] = useState(1)
 
   // 设置音量增强值
   // 来源有3个：来自内容脚本消息中的音量增强值、滑动增强滑块的值、点击图标恢复默认值
   const updateVolEnhance = (v: number) => {
-    setVomumeEnhance(v)
+    setVolEnValue(v)
     // 如果从内容脚本传来不存在媒体元素的(即值为 -1)，则不需要对其设置音量增强，直接返回
     if (v === -1) {
       return
@@ -43,9 +49,9 @@ const Popup = function (): JSX.Element {
     // 接收内容脚本发送过来的音量增强消息
     const onVolEnhance = (message: any) => {
       if (message.cmd === "volumeEnhance") {
-        // 当 volumeEnhanceValue为 -1 时表示在当前页面中没有找到媒体元素，
-        console.log("[Pop] 收到消息，设置音量增强值：", message.volumeEnhanceValue)
-        updateVolEnhance(message.volumeEnhanceValue)
+        // 当 value为 -1 时表示在当前页面中没有找到媒体元素，
+        console.log("[Pop] 收到音量增强值：", message.value)
+        updateVolEnhance(message.value)
       }
     }
 
@@ -65,14 +71,12 @@ const Popup = function (): JSX.Element {
         _ => {
           if (chrome.runtime.lastError) {
             console.log("[Pop] 不可访问内部网页")
-            setVomumeEnhance(-1)
+            setVolEnValue(-1)
             return
           }
 
           chrome.scripting.executeScript({
-            // @ts-ignore
-            target: {tabId: tab.id},
-            // @ts-ignore
+            target: {tabId: tab.id || -1},
             func: () => window.enhanceVolume()
           })
         })
@@ -84,12 +88,13 @@ const Popup = function (): JSX.Element {
     }
   }, [])
 
+
   return (
     <Space direction="vertical" style={{width: 100, padding: 5}}>
       <span className="row align-center">
         <Icon title="恢复为默认增强值 1" component={IconVolume} onClick={() => updateVolEnhance(1)}/>
-        <Slider className="width-fill-remain margin-h-large" min={0} max={10} step={0.1} value={volumeEnhance}
-                disabled={volumeEnhance === -1} onChange={v => updateVolEnhance(v)}/>
+        <Slider className="width-fill-remain margin-h-large" min={0} max={10} step={0.1} value={volEnValue}
+                disabled={volEnValue === -1} onChange={v => updateVolEnhance(v)}/>
       </span>
 
       <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/hot_topics"})}>
