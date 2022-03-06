@@ -40,7 +40,7 @@ const V2ex = {
   dealTopicList: function () {
     console.log(this.TAG, "扩展功能：1.帖子列表字体颜色为黑色；2.点击帖子右侧在扩展中浏览；3.新窗口打开帖子")
     // 帖子列表的标题设置黑色
-    document.styleSheets[0].insertRule(".item_title a.topic-link:link {color: black}")
+    document.styleSheets[0].insertRule(".item_title a.topic-link:link {color: #222}")
 
     // 点击帖子右侧（回复数地位置）时，在扩展中强行浏览该帖子
     document.querySelectorAll(".box tbody tr").forEach(e => {
