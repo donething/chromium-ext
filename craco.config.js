@@ -16,6 +16,7 @@ module.exports = {
           javlib: './src/content/sites/javlib.ts',
           v2ex: './src/content/sites/v2ex.ts',
           bili_video: './src/content/sites/videos/bili.ts',
+          jd_buy: './src/content/sites/jd_buy.ts',
           service_worker: './src/background/service_worker.ts',
           // 单独打包依赖库
           // libs: ["jsdom"]

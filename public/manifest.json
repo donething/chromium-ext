@@ -94,6 +94,15 @@
     },
     {
       "matches": [
+        "*://*.jd.com/*"
+      ],
+      "js": [
+        "/static/js/jd_buy.js"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
         "*://*.v2ex.com/*"
       ],
       "js": [
