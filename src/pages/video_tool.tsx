@@ -129,7 +129,7 @@ const Subtitle = function (props: { style: CSSProperties }): JSX.Element {
 
     // 查找出错
     if (result["errcode"] !== 0) {
-      console.log("查找字幕出错：", resp.text)
+      console.log("查找字幕出错：", result.msg)
       message.warn(`查找字幕出错：${result.msg}`)
       setWorking(false)
       return
