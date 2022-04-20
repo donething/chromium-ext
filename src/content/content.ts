@@ -1,7 +1,8 @@
 // 全网站通用的内容脚本
 
-import {insertJSSrc} from "do-utils"
 import {Translate} from "./cs/translate"
+import {EN_TS, EN_VISB} from "../pages/options/Options"
+import {insertJSSrc} from "do-utils/dist/elem"
 
 const TAG = "[CS]"
 
@@ -9,7 +10,7 @@ const deal = async function () {
   let data = await chrome.storage.sync.get({settings: {}})
 
   // 禁止网页检测是否切换到了后台
-  if (data.settings.enableDisableVisibilityAPI === false) {
+  if (data.settings[EN_VISB] === false) {
     console.log(TAG, "根据设置 已禁用禁止网页检测是否切换到了后台")
   } else {
     console.log(TAG, "禁止网页检测是否切换到了后台")
@@ -27,7 +28,7 @@ const deal = async function () {
 
 
   // 选中文本后，按 Ctrl 翻译
-  if (data.settings.enableTranslate === false) {
+  if (data.settings[EN_TS] === false) {
     console.log(TAG, "根据设置 已禁用选中文字后，按 Ctrl 弹出翻译")
   } else {
     console.log(TAG, "已开启 选中文字后，按 Ctrl 弹出翻译")

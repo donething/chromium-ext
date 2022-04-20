@@ -1,8 +1,8 @@
 // 选中文字后，按 Ctrl 弹出翻译
 // api @see https://blog.csdn.net/panshiqu/article/details/104193607
 
-import {elemOf, Msg, showMsg} from "do-utils"
 import {request} from "do-utils/dist/utils"
+import {elemOf, Msg, showMsg} from "do-utils/dist/elem"
 
 export const Translate = {
   TAG: "[Trans]",

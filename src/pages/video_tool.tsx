@@ -1,6 +1,5 @@
 import {AutoComplete, Button, Input, message, Space} from "antd"
 import React, {CSSProperties, useEffect, useRef, useState} from "react"
-import {OptionData} from "rc-select/lib/interface"
 import {request} from "do-utils/dist/utils"
 import "./video_tool.css"
 
@@ -10,6 +9,10 @@ interface SSEMsg {
   success: boolean
   msg: string
   data: any
+}
+
+interface OptionData {
+  value: string
 }
 
 // 服务端地址

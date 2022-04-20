@@ -1,7 +1,8 @@
 // B站 视频扩展
 
 import {VideoBase, VideoType} from "./basic"
-import {insertJSSrc, waitForElem} from "do-utils"
+import {EN_BILI} from "../../../pages/options/Options"
+import {insertJSSrc, waitForElem} from "do-utils/dist/elem"
 
 // B站 视频扩展
 class Bili extends VideoBase {
@@ -57,7 +58,7 @@ class Bili extends VideoBase {
 
 const deal = async () => {
   let data = await chrome.storage.sync.get({settings: {}})
-  if (data.settings.enableBiliVideo === false) {
+  if (data.settings[EN_BILI] === false) {
     console.log("[Bili]", "根据设置 已禁用哔哩哔哩视频扩展")
     return
   }

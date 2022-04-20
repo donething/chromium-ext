@@ -12,20 +12,24 @@ import HotTopics from "./pages/hot_topics"
 import ViewV2exTopic from "./pages/view_topic"
 import VideoTool from "./pages/video_tool"
 import {IPTV} from "./pages/iptv"
+import {ThemeProvider} from "@mui/material"
+import theme from "./mytheme"
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Route path="/options" component={Options}/>
-      <Route path="/popup" component={Popup}/>
-      <Route path="/bili_video" component={BiliFav}/>
-      <Route path="/video_fav" component={VideoFav}/>
-      <Route path="/http_headers" component={HttpHeaders}/>
-      <Route path="/hot_topics" component={HotTopics}/>
-      <Route path="/view_topic" component={ViewV2exTopic}/>
-      <Route path="/video_tool" component={VideoTool}/>
-      <Route path="/iptv" component={IPTV}/>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Route path="/options" component={Options}/>
+        <Route path="/popup" component={Popup}/>
+        <Route path="/bili_video" component={BiliFav}/>
+        <Route path="/video_fav" component={VideoFav}/>
+        <Route path="/http_headers" component={HttpHeaders}/>
+        <Route path="/hot_topics" component={HotTopics}/>
+        <Route path="/view_topic" component={ViewV2exTopic}/>
+        <Route path="/video_tool" component={VideoTool}/>
+        <Route path="/iptv" component={IPTV}/>
+      </Router>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )

@@ -1,5 +1,6 @@
-import {notify, request} from "do-utils/dist/utils"
+import {notify} from "do-utils/dist/elem"
 import {initCtxMenu} from "./contextmenus"
+import {request} from "do-utils/dist/utils"
 
 // 后台脚本
 /**

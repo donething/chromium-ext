@@ -1,8 +1,17 @@
 import {Button, Card, message, Modal, notification, Popconfirm, Upload} from "antd"
 import {UploadOutlined} from "@ant-design/icons"
-import {download} from "do-utils"
 import React, {CSSProperties} from "react"
 import {CardSize} from "antd/es/card"
+import {SvgIcon} from "@mui/material"
+import {download} from "do-utils/dist/elem"
+
+// 生成 Icon 图标
+export const MySvgIcon = (props: { svg: React.ElementType, title?: string, onClick?: () => void }) => {
+  return (
+    <SvgIcon title={props.title} component={props.svg} viewBox={"0 0 1024 1024"} fontSize={"small"}
+             onClick={props.onClick}/>
+  )
+}
 
 /**
  * 删除数组中的元素，并提供撤销功能

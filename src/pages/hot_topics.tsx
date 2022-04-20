@@ -1,11 +1,11 @@
 // 帖子列表组件
 
-import {copyText} from "do-utils"
-import {Button, message} from "antd"
+import {message} from "antd"
 import {useEffect, useState} from "react"
 import {useHistory} from "react-router-dom"
 import {History} from 'history'
 import {request} from "do-utils/dist/utils"
+import {copyText} from "do-utils/dist/elem"
 
 // 帖子的信息
 export interface Topic {

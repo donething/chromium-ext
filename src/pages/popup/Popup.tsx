@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import {Slider, Space} from "antd"
-import Icon from '@ant-design/icons'
 import {ReactComponent as IconVolume} from "../../icons/volume.svg"
 import {ReactComponent as IconHot} from "../../icons/hot.svg"
 import {ReactComponent as IconBili} from "../../icons/bili.svg"
@@ -10,6 +8,8 @@ import {ReactComponent as IconVideoTool} from "../../icons/video_tool.svg"
 import {ReactComponent as IconTV} from "../../icons/tv.svg"
 import {ReactComponent as IconStatus} from "../../icons/status.svg"
 import {ReactComponent as IconOptions} from "../../icons/options.svg"
+import {Button, Slider, Stack} from "@mui/material"
+import {MySvgIcon} from "../../comm/antd"
 
 declare global {
   interface Window {
@@ -90,45 +90,50 @@ const Popup = function (): JSX.Element {
 
 
   return (
-    <Space direction="vertical" style={{width: 100, padding: 5}}>
-      <span className="row align-center">
-        <Icon title="恢复为默认增强值 1" component={IconVolume} onClick={() => updateVolEnhance(1)}/>
-        <Slider className="width-fill-remain margin-h-large" min={0} max={10} step={0.1} value={volEnValue}
-                disabled={volEnValue === -1} onChange={v => updateVolEnhance(v)}/>
-      </span>
+    <Stack direction={"column"} width={130} padding={1}>
+      <Stack direction={"row"} alignItems={"center"} spacing={1}>
+        <MySvgIcon title={"恢复增强值为 1"} svg={IconVolume} onClick={() => updateVolEnhance(1)}/>
+        <Slider min={0} max={10} step={0.1} value={volEnValue} disabled={volEnValue === -1} size={"small"}
+                onChange={(_, v) => {
+                  if (typeof v === "number") {
+                    updateVolEnhance(v)
+                  }
+                }}
+        />
+      </Stack>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/hot_topics"})}>
-        <Icon component={IconHot}/> 热帖
-      </span>
+      <Button startIcon={<MySvgIcon svg={IconHot}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "/index.html#/hot_topics"})}
+      >热帖</Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/bili_video"})}>
-        <Icon component={IconBili}/> 哔哩视频
-      </span>
+      <Button startIcon={<MySvgIcon svg={IconBili}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "/index.html#/bili_video"})}
+      >哔哩视频</Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/video_fav"})}>
-        <Icon component={IconVideo}/> 视频收藏
-      </span>
+      <Button startIcon={<MySvgIcon svg={IconVideo}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "/index.html#/video_fav"})}
+      >视频收藏</Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/video_tool"})}>
-        <Icon component={IconVideoTool}/> 视频工具
-      </span>
+      <Button startIcon={<MySvgIcon svg={IconVideoTool}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "/index.html#/video_tool"})}
+      >视频工具</Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}>
-        <Icon component={IconHeaders}/> 转请求头
-      </span>
+      <Button startIcon={<MySvgIcon svg={IconHeaders}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}
+      >转请求头</Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}>
-        <Icon component={IconTV}/> IPTV源
-      </span>
+      <Button startIcon={<MySvgIcon svg={IconTV}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}
+      >IPTV 源</Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "chrome://sync-internals"})}>
-        <Icon component={IconStatus}/> 浏览器
-      </span>
+      <Button startIcon={<MySvgIcon svg={IconStatus}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "chrome://sync-internals"})}
+      >浏览器状态</Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/options"})}>
-        <Icon component={IconOptions}/> 选项
-      </span>
-    </Space>
+      <Button startIcon={<MySvgIcon svg={IconOptions}/>} sx={{marginLeft: 0}}
+              onClick={() => chrome.tabs.create({url: "/index.html#/options"})}
+      >选项</Button>
+    </Stack>
   )
 }
 

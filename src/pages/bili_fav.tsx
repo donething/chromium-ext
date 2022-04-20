@@ -1,9 +1,9 @@
 // 显示哔哩哔哩收藏的视频
 
 import React, {useEffect, useState} from "react"
-import {sec, date} from "do-utils"
 import {message} from "antd"
 import {request} from "do-utils/dist/utils"
+import {date, parseSec} from "do-utils/dist/text"
 
 declare global {
   // UP主
@@ -93,11 +93,11 @@ const VideoItem = function (props: VideoItemProps) {
         <div className="mask">
           <img src={props.cover} style={{width: 190, height: 119, borderRadius: 3}}/>
           <div className="col justify-center meta" style={{display: "none"}}>
-            <div>时长：{sec(props.duration, true)}</div>
+            <div>时长：{parseSec(props.duration, true)}</div>
             <div>播放：{props.cnt_info.play.toLocaleString('en-US')}</div>
             <div>弹幕：{props.cnt_info.danmaku.toLocaleString('en-US')}</div>
-            <div>收藏：{date({date: new Date(props.fav_time * 1000)})}</div>
-            <div>发布：{date({date: new Date(props.pubtime * 1000)})}</div>
+            <div>收藏：{date(new Date(props.fav_time * 1000))}</div>
+            <div>发布：{date(new Date(props.pubtime * 1000))}</div>
             <div className="hover" onClick={e => {
               window.open(`https://space.bilibili.com/${props.upper.mid}`, "_blank")
               e.preventDefault()

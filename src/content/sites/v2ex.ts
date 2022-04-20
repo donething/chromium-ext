@@ -1,6 +1,7 @@
 // v2ex的扩展
-import {elemOf, Msg, showMsg} from "do-utils"
 import {request} from "do-utils/dist/utils"
+import {EN_V2EX} from "../../pages/options/Options"
+import {elemOf, Msg, showMsg} from "do-utils/dist/elem"
 
 // 回复
 type Reply = {
@@ -332,7 +333,7 @@ String.prototype.format = function (args: Array<string>) {
 
 const deal = async function () {
   let data = await chrome.storage.sync.get({settings: {}})
-  if (data.settings.enableV2ex === false) {
+  if (data.settings[EN_V2EX] === false) {
     console.log(V2ex.TAG, "根据设置 已禁用该网站上的扩展功能")
     return
   }

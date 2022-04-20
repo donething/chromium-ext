@@ -4,9 +4,10 @@
 // 所以理论**不用担心**在打开多个网站时，后来的修改会覆盖前一个网站上的修改的问题，
 // 即当两个网站都读取、修改了数据，导致后一个保存操作会覆盖前一个保存操作，导致前一个的数据还是之前的数据的问题
 
-import {elemOf, Msg, sec, showMsg, waitForElem} from "do-utils"
 import {request} from "do-utils/dist/utils"
 import {isInputElem} from "../../../comm/utils"
+import {elemOf, Msg, showMsg, waitForElem} from "do-utils/dist/elem"
+import {parseSec} from "do-utils/dist/text"
 
 // typescript 向内置对象声明属性
 declare global {
@@ -242,7 +243,7 @@ export abstract class VideoBase {
     // 根据已设置的片头尾秒数生成标题
     let genTitle = (seconds: string) => {
       let tip = "左击设置，右击删除"
-      return (seconds ? `${sec(parseFloat(seconds), true)} (${seconds} 秒)` : "还未设置") + `\n${tip}`
+      return (seconds ? `${parseSec(parseFloat(seconds), true)} (${seconds} 秒)` : "还未设置") + `\n${tip}`
     }
     // children[1]为隔离元素
     (timeDiv.children[0] as HTMLElement).title = genTitle(this.videoInfo.time?.open || "");
