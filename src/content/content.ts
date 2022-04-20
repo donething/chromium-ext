@@ -1,7 +1,7 @@
 // 全网站通用的内容脚本
 
-import {insertJSSrc} from "do-utils"
 import {Translate} from "./cs/translate"
+import {insertJSSrc} from "do-utils/dist/elem"
 
 const TAG = "[CS]"
 

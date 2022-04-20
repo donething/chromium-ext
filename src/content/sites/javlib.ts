@@ -1,6 +1,5 @@
 // 扩展 Javlib 的功能
-
-import {copyText, elemOf, Msg, showMsg} from "do-utils"
+import {copyText, elemOf, Msg, showMsg} from "do-utils/dist/elem"
 
 const Javlib = {
   TAG: "[Javlib]",

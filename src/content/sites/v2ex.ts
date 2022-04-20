@@ -1,6 +1,6 @@
 // v2ex的扩展
-import {elemOf, Msg, showMsg} from "do-utils"
 import {request} from "do-utils/dist/utils"
+import {elemOf, Msg, showMsg} from "do-utils/dist/elem"
 
 // 回复
 type Reply = {

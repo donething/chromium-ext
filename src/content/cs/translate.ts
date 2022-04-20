@@ -1,15 +1,15 @@
 // 选中文字后，按 Ctrl 弹出翻译
 // api @see https://blog.csdn.net/panshiqu/article/details/104193607
 
-import {elemOf, Msg, showMsg} from "do-utils"
 import {request} from "do-utils/dist/utils"
+import {elemOf, Msg, showMsg} from "do-utils/dist/elem"
 
 export const Translate = {
   TAG: "[Trans]",
 
   // API
-  api: "https://translate.google.cn/translate_a/single?client=gtx&sl=${sl}&tl=${tl}" +
-    "&dt=t&q=${q}",
+  api: "https://translate.google.cn/translate_a/single?client=gtx&sl=#{sl}&tl=#{tl}" +
+    "&dt=t&q=#{q}",
 
   // 只当指定快捷键被按下才触发翻译
   HOTKEY: "Control",
@@ -74,8 +74,8 @@ export const Translate = {
 
       // 翻译
       // 拼接 API URL
-      let url = this.api.replace("${sl}", sl)
-        .replace("${tl}", tl).replace("${q}", encodeURIComponent(text))
+      let url = this.api.replace("#{sl}", sl)
+        .replace("#{tl}", tl).replace("#{q}", encodeURIComponent(text))
 
       // 使用后台脚本请求忘了，以绕过跨域的限制
       chrome.runtime.sendMessage({cmd: "cors", url: url}, async resp => {

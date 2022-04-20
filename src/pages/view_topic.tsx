@@ -2,9 +2,9 @@
 import React, {useEffect, useRef, useState} from "react"
 import {useLocation} from "react-router-dom"
 import {Reply, Topic} from "./hot_topics"
-import {date} from "do-utils"
 import {message} from "antd"
 import {request} from "do-utils/dist/utils"
+import {date} from "do-utils/dist/text"
 
 // 帖子的标题、内容
 const Content = function (props: { tid: string, authorIDRef: React.MutableRefObject<number> }) {
@@ -43,7 +43,7 @@ const Content = function (props: { tid: string, authorIDRef: React.MutableRefObj
             <a className="post-extra" href={topic.member.url} target="_blank">{topic.member.username}</a>
 
             <div className="row justify-end margin-v">
-              <div className="post-extra">{date({date: new Date(topic.created * 1000)})}</div>
+              <div className="post-extra">{date(new Date(topic.created * 1000))}</div>
               <a className="post-extra margin-h-large" href={topic.node.url} target="_blank">{topic.node.title}</a>
             </div>
           </div>
@@ -75,7 +75,7 @@ const ReplyItem = function (props: { reply: Reply, index: number, authorID: numb
             </span>
 
             <div className="row justify-end post-extra">
-              <span className="margin-h">{date({date: new Date(reply.created * 1000)})}</span>
+              <span className="margin-h">{date(new Date(reply.created * 1000))}</span>
               <span className="margin-h">#{props.index + 1}</span>
             </div>
           </div>

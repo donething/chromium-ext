@@ -1,7 +1,8 @@
 /**
  * 订购京东购物车中指定的商品
  */
-import {sleep, waitForElem} from "do-utils"
+import {sleep} from "do-utils"
+import {waitForElem} from "do-utils/dist/elem"
 
 // 标签
 const TAG = "[JDBUY]"

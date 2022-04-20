@@ -1,7 +1,8 @@
 import {AutoComplete, Button, Input, message, Space} from "antd"
 import React, {CSSProperties, useEffect, useRef, useState} from "react"
-import {OptionData} from "rc-select/lib/interface"
 import {request} from "do-utils/dist/utils"
+// @ts-ignore
+import {OptionData} from "rc-select/lib/interface"
 import "./video_tool.css"
 
 // SSE 接收的消息
