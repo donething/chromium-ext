@@ -14,7 +14,7 @@ interface SSEMsg {
 }
 
 // 服务端地址
-const ADDR = "http://127.0.0.1:8021"
+const ADDR = "http://127.0.0.1:58000"
 
 // 重命名的日志项
 const RnLogItem = function (props: { sseMsg: SSEMsg }) {

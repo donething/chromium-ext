@@ -4,7 +4,7 @@ import {copyText, elemOf, Msg, showMsg} from "do-utils/dist/elem"
 const Javlib = {
   TAG: "[Javlib]",
   // 本地后台服务地址
-  host: "http://127.0.0.1:8021",
+  host: "http://127.0.0.1:58000",
   // 默认的广告评论的关键字，以半角逗号","分隔
   ADS_TEXT: "點擊進入,点击进入,點擊下載,点击下載,点击下载,点此下载,点击此处,极速下载,可离线,无需等待,無需等待",
 
