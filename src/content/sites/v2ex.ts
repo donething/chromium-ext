@@ -199,7 +199,7 @@ const V2ex = {
 
     // 悬浮@用户时，显示对话列表
     // 定时器集合，用于实现悬浮操作，楼层号为其键
-    let timers: { [floor: string]: NodeJS.Timer } = {}
+    let timers: { [floor: string]: number } = {}
     document.addEventListener("mouseover", event => {
       let target = event.target as HTMLLinkElement
       if (target.tagName === "A" && target.href.indexOf("/member/") >= 0
