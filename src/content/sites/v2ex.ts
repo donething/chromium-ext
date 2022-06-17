@@ -4,20 +4,39 @@ import {elemOf, Msg, showMsg} from "do-utils/dist/elem"
 
 // 回复
 type Reply = {
-  // 发表回复的用户
-  member: {
-    // 用户名
-    username: string,
-    // 用户头像（大）
-    avatar_large: string,
-  },
-
+  // 该回复的 ID
+  id: number
   // 用户发表的内容（原始）
   content: string
   // 用户发表的内容（HTML处理化后）
   content_rendered: string
-  // 回复的创建时间戳
+  // 回复的创建时间戳（秒）
   created: number
+  // 发表回复的用户
+  member: Member
+}
+// 用户
+type Member = {
+  // 用户 ID
+  id: number
+  // 用户名
+  username: string
+  bio: string
+  website: string
+  github: string
+  // 用户主页
+  url: string
+  // 用户头像
+  avatar: string
+  // 用户注册时间戳（秒）
+  created: number
+}
+
+// 请求帖子回复的响应内容
+type RespReplies = {
+  success: boolean,
+  message: string,
+  result: Reply[]
 }
 
 const V2ex = {
@@ -25,6 +44,9 @@ const V2ex = {
 
   // 此帖的所有回复
   allReplies: [] as Array<Reply>,
+  // 已获取到的页数，初始化时先获取最新的所有回复。然后每次悬浮@用户名显示对话时，需先获取新回复
+  // 此变量用于保存已获取的页数，从当前页（包括）获取新回复时，根据 allReplies 最后一个回复的 ID 属性，只追加新回复
+  page: 1,
 
   // 对话列表的弹出层
   commsDiv: document.createElement("div") as HTMLElement,
@@ -86,10 +108,7 @@ const V2ex = {
   },
 
   // 帖子详情页
-  /**
-   * 添加回复列表的弹出层
-   * @return {Promise<void>}
-   */
+  // 添加回复列表的弹出层
   initPopupDiv: async function () {
     // 读取对话框列表的面板
     let htmlURL = chrome.runtime.getURL("/htmls/v2ex_pane.html")
@@ -113,22 +132,60 @@ const V2ex = {
     document.body.appendChild(this.commsDiv)
   },
 
+  // 获取该贴的所有最新回复
+  dlLastReplies: async function () {
+    // 提取帖子的 ID
+    let result = window.location.pathname.match(/\/t\/(\d+)/)
+    if (!result || result.length < 1) {
+      console.log(this.TAG, "无法匹配到帖子的 ID，退出获取该贴的所有回复")
+      return
+    }
+
+    // 请求头
+    let data = await chrome.storage.sync.get({settings: {v2exToken: ""}})
+    if (!data.settings.v2exToken) {
+      console.log(this.TAG, "V2ex API Token 为空，需要到本扩展的“选项”中设置")
+      return
+    }
+    let headers = {Authorization: `Bearer ${data.settings.v2exToken}`}
+
+    // 获取该贴的最新回复
+    // 是否需要在新获取的回复数组中查找重合部分的索引，此部只需在第一次循环中判断，后面都不需要查找重合
+    let needDetectCoincide = true
+    while (true) {
+      let url = `//${window.location.host}/api/v2/topics/${result[1]}/replies?p=${this.page}`
+      // 下载所有回复，存储到 allReplies 对象中
+      let resp = await request(url, undefined, {headers: headers})
+      let replyies: RespReplies = await resp.json()
+
+      // 在新获取的回复数组中查找 allReplies 最后一个回复的 ID，
+      // 找到索引即 +1，以免重复加入相同的回复；没有找到则依然为 0
+      // 将正确的回复添加到 allReplies 中
+      let coincideIndex = 0
+      if (needDetectCoincide && this.allReplies.length !== 0) {
+        let s = replyies.result.findIndex(v => v.id === this.allReplies[this.allReplies.length - 1].id)
+        coincideIndex = s === -1 ? 0 : s + 1
+      }
+
+      this.allReplies.push(...replyies.result.slice(coincideIndex))
+
+      // 是否继续获取更多回复
+      // API 默认每次返回 20 条回复，当此次获取的回复数量小于该值时，表示已获取完毕
+      if (replyies.result.length < 20) {
+        break
+      }
+
+      // 继续
+      needDetectCoincide = false
+      this.page++
+    }
+  },
+
   // 初始化帖子详情页内的会话列表
   // 1. 筛选、显示 @TA 的回复或 TA 的回复
   // 2. 点击会话框上的楼层，在原网页中跳转
   initCommsPanel: async function () {
     console.log(this.TAG, "扩展功能：1.筛选、显示 @TA 的回复或 TA 的回复；2.点击会话框上的楼层，在原网页中跳转")
-
-    // 添加回复列表的弹出层
-    this.initPopupDiv()
-
-    // 联网获取该贴的所有回复
-    let reg = /\/t\/(\d+)/
-    reg.test(window.location.pathname)
-    let url = `//${window.location.host}/api/replies/show.json?topic_id=${RegExp.$1}`
-    // 下载所有回复，存储到allReplies对象中
-    let resp = await request(url)
-    this.allReplies = await resp.json()
 
     // 迭代当前页面的所有回复的元素，添加功能
     for (let item of document.querySelectorAll(".reply_content")) {
@@ -273,17 +330,16 @@ const V2ex = {
     // 楼层号
     let floorNo = 0
 
+    // 先获取最新的回复
+    await this.dlLastReplies()
     // 填充所有回复
     for (let reply of this.allReplies) {
       floorNo++
       // 从回复的数组中，提取需要的回复
       if (filterFunc(reply, floorNo)) {
-        // 替换为大图
-        let avatar = reply.member.avatar_large.replace("_mini.", "_large.")
-          .replace("s=24", "s=48")
         // @ts-ignore
         html += tpl.format({
-          avatar: avatar,
+          avatar: reply.member.avatar,
           author: reply.member.username,
           replyTag: isCurrentFunc(floorNo) ? "[当前]" : "",
           date: new Date(reply.created * 1000).toLocaleString('chinese', {hour12: false}),
@@ -352,6 +408,8 @@ const deal = async function () {
 
   // 处理帖子详情页
   if (window.location.pathname.indexOf("/t/") === 0) {
+    V2ex.dlLastReplies()
+    await V2ex.initPopupDiv()
     V2ex.initCommsPanel()
   }
 }

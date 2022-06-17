@@ -47,6 +47,29 @@ function Functions() {
   )
 }
 
+// V2ex Token
+function V2exToken() {
+  const [token, setToken] = useState("")
+  useEffect(() => {
+    const init = async () => {
+      let data = await chrome.storage.sync.get({settings: {v2exToken: ""}})
+      setToken(data.settings.v2exToken)
+    }
+    init()
+  }, [])
+
+  return (
+    <Card title="V2ex API Token" size="small" style={{width: 300}} extra={<Button onClick={async _ => {
+      let data = await chrome.storage.sync.get({settings: {v2exToken: ""}})
+      data.settings.v2exToken = token
+      chrome.storage.sync.set({settings: data.settings})
+      message.success("已保存 V2ex Token")
+    }} type="primary" size="small" shape="round">保存</Button>}>
+      <TextArea value={token} rows={2} onChange={e => setToken(e.target.value)}/>
+    </Card>
+  )
+}
+
 // javlib 广告关键字（以"|"分隔）
 function JavAds() {
   const [value, setValue] = useState("")
@@ -57,13 +80,15 @@ function JavAds() {
     }
     init()
   }, [])
+
   return (
-    <Card title="Javlib 广告关键字(以'|'分隔)" size="small" style={{width: 300}} extra={<Button onClick={async _ => {
-      let data = await chrome.storage.sync.get({settings: {javlibAds: ""}})
-      data.settings.javlibAds = value
-      chrome.storage.sync.set({settings: data.settings})
-      message.success("已保存 广告关键字")
-    }} type="primary" size="small" shape="round">保存</Button>}>
+    <Card title="Javlib 广告关键字(以'|'分隔)" size="small" style={{width: 300}}
+          extra={<Button onClick={async _ => {
+            let data = await chrome.storage.sync.get({settings: {javlibAds: ""}})
+            data.settings.javlibAds = value
+            chrome.storage.sync.set({settings: data.settings})
+            message.success("已保存 广告关键字")
+          }} type="primary" size="small" shape="round">保存</Button>}>
       <TextArea value={value} rows={15} onChange={e => setValue(e.target.value)}/>
     </Card>
   )
@@ -77,6 +102,7 @@ const Options = function () {
   return (
     <div className="row wrap">
       <Functions/>
+      <V2exToken/>
       <JavAds/>
       <BackupPanel/>
     </div>
