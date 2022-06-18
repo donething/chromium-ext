@@ -175,6 +175,15 @@ const V2ex = {
         break
       }
 
+      // 因为当 page 大于最后一页回复（每页 20条 回复）时，依然能获得最后一页的回复列表，而不是空列表，
+      // 导致当总回复数刚好是 20 的倍数时，上面的 < 20 失效，会一直继续增加 page 获取回复
+      // 此时需要再次判断获取的回复列表中最后一条回复的 ID 和 allReplies 中最后一条回复的 ID 一样时，即可知是在重复获取
+      // 需要退出循环
+      if (!needDetectCoincide &&
+        replyies.result[replyies.result.length - 1].id === this.allReplies[this.allReplies.length - 1].id) {
+        break
+      }
+
       // 继续
       needDetectCoincide = false
       this.page++
