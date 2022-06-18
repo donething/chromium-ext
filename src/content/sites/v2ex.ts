@@ -158,6 +158,12 @@ const V2ex = {
       let resp = await request(url, undefined, {headers: headers})
       let replyies: RespReplies = await resp.json()
 
+      // 判断是否请求成功
+      if (!replyies.success) {
+        console.log(this.TAG, "获取回复列表时出错：", replyies.message)
+        break
+      }
+
       // 在新获取的回复数组中查找 allReplies 最后一个回复的 ID，
       // 找到索引即 +1，以免重复加入相同的回复；没有找到则依然为 0
       // 将正确的回复添加到 allReplies 中
