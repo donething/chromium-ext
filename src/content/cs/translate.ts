@@ -8,7 +8,7 @@ export const Translate = {
   TAG: "[Trans]",
 
   // API
-  api: "https://translate.google.cn/translate_a/single?client=gtx&sl=#{sl}&tl=#{tl}" +
+  api: "https://translate.google.com/translate_a/single?client=gtx&sl=#{sl}&tl=#{tl}" +
     "&dt=t&q=#{q}",
 
   // 只当指定快捷键被按下才触发翻译
