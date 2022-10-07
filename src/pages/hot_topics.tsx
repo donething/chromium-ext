@@ -141,7 +141,7 @@ const HotTopics = function () {
 
     const init = async () => {
       // 水深火热的帖子
-      let resp = await request("https://v2ex.com/api/topics/show.json?node_id=314&t=${Date.now()}")
+      let resp = await request(`https://v2ex.com/api/topics/show.json?node_id=314&t=${Date.now()}`)
       let list: Array<Topic> = await resp.json()
       for (const topic of list) {
         setTopics(prev => [...prev, topic])
