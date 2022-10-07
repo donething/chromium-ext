@@ -123,9 +123,14 @@ const V2ex = {
     this.initPopupDiv()
 
     // 联网获取该贴的所有回复
-    let reg = /\/t\/(\d+)/
-    reg.test(window.location.pathname)
-    let url = `//${window.location.host}/api/replies/show.json?topic_id=${RegExp.$1}`
+    let reg = window.location.pathname.match(/\/t\/(\d+)/)
+    if (!reg || reg.length < 2) {
+      console.log(this.TAG, "提取帖子的 ID 失败：", window.location.pathname)
+      return
+    }
+
+    // 最后加参数t，是为了让浏览器每次都重新请求新的数据，而不是"from disk cache"
+    let url = `//${window.location.host}/api/replies/show.json?topic_id=${reg[1]}&t=${Date.now()}`
     // 下载所有回复，存储到allReplies对象中
     let resp = await request(url)
     this.allReplies = await resp.json()
