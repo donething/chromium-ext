@@ -13,7 +13,7 @@ const Content = function (props: { tid: string, authorIDRef: React.MutableRefObj
     const init = async () => {
       setTopic(null)
       // 获取帖子的内容
-      let topicResp = await request(`https://v2ex.com/api/topics/show.json?id=${props.tid}`)
+      let topicResp = await request(`https://v2ex.com/api/topics/show.json?id=${props.tid}&t=${Date.now()}`)
       let topic: Topic = (await topicResp.json())[0]
       if (!topic) {
         message.warn("无法获取该帖子的内容")
@@ -94,7 +94,7 @@ const Repies = function (props: { tid: string, authorIDRef: React.MutableRefObje
     const init = async () => {
       setReplies([])
       // 获取该贴的回复列表
-      let repliesResp = await request(`https://v2ex.com/api/replies/show.json?topic_id=${props.tid}`)
+      let repliesResp = await request(`https://v2ex.com/api/replies/show.json?topic_id=${props.tid}&t=${Date.now()}`)
       let text = await repliesResp.text()
       // 因为 @用户 的网址不带有协议和域名，所以手动搜索追加
       let nText = text.replaceAll("/member/", "https://v2ex.com/member/")
