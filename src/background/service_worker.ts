@@ -70,6 +70,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
       console.log(`无法重定向，匹配出错：${url.href}`)
     } else if (/^https:\/\/zh\.(m\.)?wikipedia.org\/.*$/.test(url.href)) {
+      // 排除某些页面
+      // "/w/"为编辑页面
+      if (url.href.indexOf("/w/") !== -1) {
+        console.log("排除Wiki页面：", url.href)
+        return
+      }
+
       // 维基
       // 已是正确的网址时，不能重定向，否则会导致页面一直刷新
       // 仅当 URL 不为移动端端页面（即为 PC 端页面），且语言为简体中文时，不需重定向
