@@ -70,4 +70,4 @@ const start = async (pid: string) => {
 }
 
 // 开始
-start("100033551654")
+// start("100033551654")
