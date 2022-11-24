@@ -3,6 +3,7 @@
 import qrcodeParser from "qrcode-parser"
 import {copyTextInBG} from "do-utils"
 import {request} from "do-utils/dist/utils"
+import {notify} from "do-utils/dist/elem"
 
 /**
  * 优先选择文本数据
@@ -73,6 +74,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         console.log("已解析二维码为：", text)
         // 复制文本到剪贴板
         copyTextInBG(text || "")
+        notify({
+          title: "已解析二维码",
+          message: "已复制到剪贴板",
+          iconUrl: chrome.runtime.getURL("/icons/extension_128.png")
+        })
       }).catch(e => {
         console.log("解析二维码出错：", e)
         return
