@@ -52,7 +52,7 @@ const V2ex = {
       target.title = "点击在扩展中浏览该帖子"
 
       // 点击以在本扩展中浏览该帖子
-      target.onclick = (event) => {
+      target.onclick = async (event) => {
         // 获取该贴的链接
         let elem = event.target as HTMLElement
         let linkElem = elem.closest("tr")?.querySelector(".topic-link") as HTMLLinkElement
@@ -64,8 +64,8 @@ const V2ex = {
 
         // 发送消息，新标签打开帖子
         chrome.runtime.sendMessage({
-          cmd: "newtab",
-          url: `/index.html#/view_topic?tid=${group[1]}`
+          cmd: "viewTopic",
+          tid: group[1]
         })
 
         event.preventDefault()

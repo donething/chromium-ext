@@ -1,6 +1,8 @@
 import {request} from "do-utils/dist/utils"
 import {initCtxMenu} from "./contextmenus"
 import {notify} from "do-utils/dist/elem"
+// 在第三方浏览帖子的扩展的名字
+const EXT_VIEW_TOPICS = "Chromium Tasks"
 
 // 后台脚本
 /**
@@ -22,6 +24,12 @@ chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
     // chrome.runtime.sendMessage({cmd: "newtab", url: url})
     case "newtab":
       chrome.tabs.create({url: req.url})
+      break
+
+    // 浏览V2ex主题
+    // chrome.runtime.sendMessage({cmd: "viewTopic", tid: tid})
+    case "viewTopic":
+      viewTopic(req.tid)
       break
 
     // 进行跨域请求
@@ -108,3 +116,18 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.runtime.onInstalled.addListener(() => {
   initCtxMenu()
 })
+
+/**
+ * 浏览主题
+ * @param tid 主题的 ID
+ */
+const viewTopic = async (tid: string) => {
+  let exts = await chrome.management.getAll()
+  let index = exts.findIndex(value => value.name === EXT_VIEW_TOPICS)
+  if (index === -1) {
+    console.log("无法浏览主题：无法找到第三方扩展", EXT_VIEW_TOPICS)
+    return
+  }
+
+  chrome.tabs.create({url: `chrome-extension://${exts[index].id}/index.html#/view_topic?tid=${tid}`})
+}

@@ -8,8 +8,6 @@ import Options from "./pages/options/Options"
 import BiliFav from "./pages/bili_fav"
 import VideoFav from "./pages/videos_fav"
 import HttpHeaders from "./pages/http_headers"
-import HotTopics from "./pages/hot_topics"
-import ViewV2exTopic from "./pages/view_topic"
 import VideoTool from "./pages/video_tool"
 import {IPTV} from "./pages/iptv"
 
@@ -21,8 +19,6 @@ ReactDOM.render(
       <Route path="/bili_video" component={BiliFav}/>
       <Route path="/video_fav" component={VideoFav}/>
       <Route path="/http_headers" component={HttpHeaders}/>
-      <Route path="/hot_topics" component={HotTopics}/>
-      <Route path="/view_topic" component={ViewV2exTopic}/>
       <Route path="/video_tool" component={VideoTool}/>
       <Route path="/iptv" component={IPTV}/>
     </Router>

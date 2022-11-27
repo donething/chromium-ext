@@ -13,7 +13,8 @@
     "notifications",
     "storage",
     "scripting",
-    "clipboardWrite"
+    "clipboardWrite",
+    "management"
   ],
   "host_permissions": [
     "<all_urls>"

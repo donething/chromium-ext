@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 import {Slider, Space} from "antd"
 import Icon from '@ant-design/icons'
 import {ReactComponent as IconVolume} from "../../icons/volume.svg"
-import {ReactComponent as IconHot} from "../../icons/hot.svg"
 import {ReactComponent as IconBili} from "../../icons/bili.svg"
 import {ReactComponent as IconVideo} from "../../icons/video.svg"
 import {ReactComponent as IconHeaders} from "../../icons/headers.svg"
@@ -95,10 +94,6 @@ const Popup = function (): JSX.Element {
         <Icon title="恢复为默认增强值 1" component={IconVolume} onClick={() => updateVolEnhance(1)}/>
         <Slider className="width-fill-remain margin-h-large" min={0} max={10} step={0.1} value={volEnValue}
                 disabled={volEnValue === -1} onChange={v => updateVolEnhance(v)}/>
-      </span>
-
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/hot_topics"})}>
-        <Icon component={IconHot}/> 热帖
       </span>
 
       <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/bili_video"})}>
