@@ -17,6 +17,7 @@ module.exports = {
           v2ex: './src/content/sites/v2ex.ts',
           bili_video: './src/content/sites/videos/bili.ts',
           jd_buy: './src/content/sites/jd_buy.ts',
+          alist: './src/content/sites/alist.ts',
           service_worker: './src/background/service_worker.ts',
           // 单独打包依赖库
           // libs: ["jsdom"]

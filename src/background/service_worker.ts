@@ -108,6 +108,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         target: {tabId: tab.id},
         files: ["/static/js/bili_video.js"]
       })
+      return
+    }
+
+    // 在 Alist 播放页面，下载播放列表
+    if (url.host === "localhost:5244" || url.host === "127.0.0.1:5244") {
+      chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        files: ["/static/js/alist.js"]
+      })
+      return
     }
   }
 })

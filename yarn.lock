@@ -7339,6 +7339,11 @@ lz-string@^1.4.4:
   resolved "https://registry.npmjs.org/lz-string/-/lz-string-1.4.4.tgz"
   integrity sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=
 
+m3u-parser-generator@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/m3u-parser-generator/-/m3u-parser-generator-1.2.0.tgz#238d4473b8bf8d355493f78dca48ae0598962b46"
+  integrity sha512-OyE/U0Irwgt4PLdOpktDuodCNEjehAVSasrczVtkf353Rxqq14KhR/HlId4564jplVXAr9qLv3tCQ9l/DTQxsg==
+
 magic-string@^0.25.0, magic-string@^0.25.7:
   version "0.25.9"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.25.9.tgz"
