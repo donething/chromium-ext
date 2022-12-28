@@ -67,6 +67,14 @@
     },
     {
       "matches": [
+        "*://www.google.com/search*"
+      ],
+      "js": [
+        "/static/js/google_search.js"
+      ]
+    },
+    {
+      "matches": [
         "*://www.huya.com/*"
       ],
       "exclude_matches": [

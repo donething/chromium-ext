@@ -18,6 +18,7 @@ module.exports = {
           bili_video: './src/content/sites/videos/bili.ts',
           jd_buy: './src/content/sites/jd_buy.ts',
           alist: './src/content/sites/alist.ts',
+          google_search: './src/content/sites/google_search.ts',
           service_worker: './src/background/service_worker.ts',
           // 单独打包依赖库
           // libs: ["jsdom"]
