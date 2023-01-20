@@ -8,9 +8,7 @@ import {download} from "do-utils/dist/elem"
 const TAG = "[CEXT]"
 
 // 视频格式
-const VIDEO_EXT = ".avi.mp4.mkv.ts"
-// Alist 运行端口
-const ALIST_PORT = 5244
+const VIDEO_EXT = ".mp4.mkv.avi.mov.rmvb.webm.flv"
 
 // 获取 Alist 的播放列表
 const genAlistPlaylist = async () => {
@@ -81,8 +79,13 @@ const genAlistPlaylist = async () => {
     // 需要先排序
     links = links.sort((a, b) => a.localeCompare(b))
     for (let link of links) {
+      // 解码为"https://example.com/测试.mp4"
       const decodeLink = decodeURIComponent(link)
-      const media = new M3uMedia(decodeLink.replace(`:${ALIST_PORT}/`, `:${ALIST_PORT}/d/`))
+      const u = new URL(decodeLink)
+      // 此时 u.pathname 为经过encodeURIComponent()后的字符串，需要再解码得到 "/测试.mp4"
+      // 再替换pathname，得到"https://example.com"
+      const host = decodeLink.replace(decodeURIComponent(u.pathname), "")
+      const media = new M3uMedia(host + "/d" + u.pathname)
       media.name = decodeLink.substring(decodeLink.lastIndexOf("/") + 1)
 
       playlist.medias.push(media)

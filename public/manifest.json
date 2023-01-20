@@ -67,6 +67,14 @@
     },
     {
       "matches": [
+        "*://files.998233.xyz/*"
+      ],
+      "js": [
+        "/static/js/alist.js"
+      ]
+    },
+    {
+      "matches": [
         "*://www.google.com/search*"
       ],
       "js": [
