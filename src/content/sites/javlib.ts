@@ -4,7 +4,7 @@ import {copyText, elemOf, Msg, showMsg} from "do-utils/dist/elem"
 const Javlib = {
   TAG: "[Javlib]",
   // 本地后台服务地址
-  host: "http://127.0.0.1:9900",
+  host: "http://127.0.0.1:8800",
   // 默认的广告评论的关键字，以半角逗号","分隔
   ADS_TEXT: "點擊進入,点击进入,點擊下載,点击下載,点击下载,点此下载,点击此处,极速下载,可离线,无需等待,無需等待",
 
@@ -59,7 +59,7 @@ const Javlib = {
     chrome.runtime.sendMessage(msg, resp => {
       let result = JSON.parse(resp.text)
       // 出错了
-      if (result["errcode"] !== 0) {
+      if (result["code"] !== 0) {
         console.log(this.TAG, "查找字幕出错：", resp.text)
         showMsg(`查找字幕出错：${result.msg}`, Msg.error)
         return
@@ -145,7 +145,7 @@ const Javlib = {
     chrome.runtime.sendMessage({cmd: "cors", url: url, data: fanhaos}, resp => {
       // 解析
       let results = JSON.parse(resp.text)
-      if (results.errcode !== 0) {
+      if (results.code !== 0) {
         showMsg("查找本地是否存在该影片时出错", Msg.error)
         console.log(this.TAG, "查找本地是否存在该影片时出错：", resp.text)
         return
@@ -205,7 +205,7 @@ const Javlib = {
       // 注意不能为了性能将`new RegExp(ads)`放在循坏外，避免`lastIndex`偏移导致匹配不到广告的问题
       // 参考：https://www.cnblogs.com/52cik/p/js-regexp-test.html
       if (new RegExp(ads).test(adText)) {
-        console.log(this.TAG, "将屏蔽", adText)
+        console.log(this.TAG, `将屏蔽 【${adText}】`)
         let target = elem.closest(".comment") as HTMLElement
         target.style.display = "none"
         ban++
