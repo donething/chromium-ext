@@ -8,7 +8,7 @@ import {download} from "do-utils/dist/elem"
 const TAG = "[CEXT]"
 
 // 视频格式
-const VIDEO_EXT = ".mp4.mkv.avi.mov.rmvb.webm.flv"
+const VIDEO_EXT = ".mp4.mkv.avi.ts.mov.rmvb.webm.flv"
 
 // 获取 Alist 的播放列表
 const genAlistPlaylist = async () => {
