@@ -1,6 +1,8 @@
 import {request} from "do-utils/dist/utils"
 import {initCtxMenu} from "./contextmenus"
 import {notify} from "do-utils/dist/elem"
+import RuleActionType = chrome.declarativeNetRequest.RuleActionType
+import ResourceType = chrome.declarativeNetRequest.ResourceType
 // 在第三方浏览帖子的扩展的名字
 const EXT_VIEW_TOPICS = "Chromium Tasks"
 
@@ -105,6 +107,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 // 初始化上下文菜单
 chrome.runtime.onInstalled.addListener(() => {
   initCtxMenu()
+
+  initDeclarativeNet()
 })
 
 /**
@@ -120,4 +124,29 @@ const viewTopic = async (tid: string) => {
   }
 
   chrome.tabs.create({url: `chrome-extension://${exts[index].id}/index.html#/view_topic?tid=${tid}`})
+}
+
+/**
+ * 重定向
+ */
+const initDeclarativeNet = () => {
+  chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [1],
+    addRules: [
+      {
+        id: 1,
+        priority: 1,
+        action: {
+          type: RuleActionType.REDIRECT,
+          redirect: {
+            regexSubstitution: "https://imgoo.deno.dev/\\0",
+          }
+        },
+        condition: {
+          regexFilter: "(^https://s1.yesimg.com/.*\\.(jpg|jpeg|png|gif))",
+          resourceTypes: [ResourceType.MAIN_FRAME, ResourceType.SUB_FRAME,ResourceType.IMAGE]
+        }
+      }
+    ]
+  }, () => console.log("declarativeNetRequest 失败：", chrome.runtime.lastError))
 }
