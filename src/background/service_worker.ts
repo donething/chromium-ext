@@ -139,12 +139,15 @@ const initDeclarativeNet = () => {
         action: {
           type: RuleActionType.REDIRECT,
           redirect: {
+            // '\0' 代表正则匹配的结果
             regexSubstitution: "https://imgoo.deno.dev/\\0",
           }
         },
         condition: {
+          // 需要指定图片格式，否则循环重定向
           regexFilter: "(^https://s1.yesimg.com/.*\\.(jpg|jpeg|png|gif))",
-          resourceTypes: [ResourceType.MAIN_FRAME, ResourceType.SUB_FRAME,ResourceType.IMAGE]
+          // 对网页中引用的图片需要 ResourceType.IMAGE
+          resourceTypes: [ResourceType.MAIN_FRAME, ResourceType.SUB_FRAME, ResourceType.IMAGE]
         }
       }
     ]
