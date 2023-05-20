@@ -145,7 +145,7 @@ const initDeclarativeNet = () => {
         },
         condition: {
           // 需要指定图片格式，否则循环重定向
-          regexFilter: "(^https://s1.yesimg.com/.*\\.(jpg|jpeg|png|gif))",
+          regexFilter: "(^https://.*\\.(jpg|jpeg|png|gif))",
           isUrlFilterCaseSensitive: false,
           // 对网页中引用的图片需要 ResourceType.IMAGE
           resourceTypes: [ResourceType.MAIN_FRAME, ResourceType.SUB_FRAME, ResourceType.IMAGE]
