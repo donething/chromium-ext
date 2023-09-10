@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.8",
     "@mui/material": "^5.14.8",
-    "do-comps": "^0.2.61",
+    "do-comps": "^0.2.62",
     "do-utils": "^1.0.57",
     "m3u-parser-generator": "^1.2.0",
     "qrcode-parser": "^2.0.0",

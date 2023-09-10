@@ -73,7 +73,7 @@ const JavAds = () => {
       <Divider/>
 
       <CardContent sx={{display: "flex", flexFlow: "column nowrap", gap: 4}}>
-        <Stack>
+        <Stack gap={1}>
           <Typography>(以'|'分隔)</Typography>
           <TextField multiline value={value} rows={10} size={"small"}
                      onChange={e => setValue(e.target.value)}/>

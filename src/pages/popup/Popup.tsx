@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react'
-import {ReactComponent as IconVolume} from "../../icons/volume.svg"
 import {ReactComponent as IconBili} from "../../icons/bili.svg"
 import {ReactComponent as IconVideo} from "../../icons/video.svg"
 import {ReactComponent as IconHeaders} from "../../icons/headers.svg"
 import {ReactComponent as IconTV} from "../../icons/tv.svg"
 import {ReactComponent as IconStatus} from "../../icons/status.svg"
 import {ReactComponent as IconOptions} from "../../icons/options.svg"
-import {Button, Slider, Stack, SvgIcon} from "@mui/material";
+import {Slider, Stack, SvgIcon} from "@mui/material"
+import {DoButtonLeftAligned} from "do-comps"
+import VolumeUpIcon from "@mui/icons-material/VolumeUp"
 
 declare global {
   // 调用 window.enhanceVolume 需要用到 Window
@@ -16,7 +17,7 @@ declare global {
 }
 
 // 弹窗
-const Popup = function (): JSX.Element {
+const Popup = () => {
   // 音量增强值
   const [volEnValue, setVolEnValue] = useState(1)
 
@@ -88,44 +89,44 @@ const Popup = function (): JSX.Element {
 
   return (
     <Stack width={100}>
-      <span className="row align-center">
-        <SvgIcon title="恢复为默认增强值 1" component={IconVolume} onClick={() => updateVolEnhance(1)}/>
-        <Slider className="width-fill-remain margin-h-large" min={0} max={10} step={0.1} value={volEnValue}
+      <Stack direction={"row"} paddingLeft={1} paddingRight={1} gap={1}>
+        <SvgIcon component={VolumeUpIcon} color={"primary"} onClick={() => updateVolEnhance(1)}/>
+        <Slider min={0} step={0.1} value={volEnValue} size={"small"}
                 disabled={volEnValue === -1}
                 onChange={(_, value) => {
                   updateVolEnhance(Array.isArray(value) ? value[0] : value)
                 }}/>
-      </span>
+      </Stack>
 
-      <Button startIcon={<SvgIcon component={IconBili} viewBox={"0 0 1024 1024"}/>}
-              onClick={() => chrome.tabs.create({url: "/index.html#/bili_video"})}>
+      <DoButtonLeftAligned startIcon={<SvgIcon component={IconBili} viewBox={"0 0 1024 1024"}/>}
+                           onClick={() => chrome.tabs.create({url: "/index.html#/bili_video"})}>
         哔哩视频
-      </Button>
+      </DoButtonLeftAligned>
 
-      <Button startIcon={<SvgIcon component={IconVideo} viewBox={"0 0 1024 1024"}/>}
-              onClick={() => chrome.tabs.create({url: "/index.html#/video_fav"})}>
+      <DoButtonLeftAligned startIcon={<SvgIcon component={IconVideo} viewBox={"0 0 1024 1024"}/>}
+                           onClick={() => chrome.tabs.create({url: "/index.html#/video_fav"})}>
         视频收藏
-      </Button>
+      </DoButtonLeftAligned>
 
-      <Button startIcon={<SvgIcon component={IconHeaders} viewBox={"0 0 1024 1024"}/>}
-              onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}>
+      <DoButtonLeftAligned startIcon={<SvgIcon component={IconHeaders} viewBox={"0 0 1024 1024"}/>}
+                           onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}>
         转请求头
-      </Button>
+      </DoButtonLeftAligned>
 
-      <Button startIcon={<SvgIcon component={IconTV} viewBox={"0 0 1024 1024"}/>}
-              onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}>
+      <DoButtonLeftAligned startIcon={<SvgIcon component={IconTV} viewBox={"0 0 1024 1024"}/>}
+                           onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}>
         IPTV 源
-      </Button>
+      </DoButtonLeftAligned>
 
-      <Button startIcon={<SvgIcon component={IconStatus} viewBox={"0 0 1024 1024"}/>}
-              onClick={() => chrome.tabs.create({url: "chrome://sync-internals"})}>
+      <DoButtonLeftAligned startIcon={<SvgIcon component={IconStatus} viewBox={"0 0 1024 1024"}/>}
+                           onClick={() => chrome.tabs.create({url: "chrome://sync-internals"})}>
         浏览器
-      </Button>
+      </DoButtonLeftAligned>
 
-      <Button startIcon={<SvgIcon component={IconOptions} viewBox={"0 0 1024 1024"}/>}
-              onClick={() => chrome.tabs.create({url: "/index.html#/options"})}>
+      <DoButtonLeftAligned startIcon={<SvgIcon component={IconOptions} viewBox={"0 0 1024 1024"}/>}
+                           onClick={() => chrome.tabs.create({url: "/index.html#/options"})}>
         选项
-      </Button>
+      </DoButtonLeftAligned>
     </Stack>
   )
 }
