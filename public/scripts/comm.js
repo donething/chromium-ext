@@ -12,7 +12,7 @@
  * @return {Element} 解析得到的 Node 对象
  * @see https://stackoverflow.com/a/494348/8179418
  */
-const elemOf = function (str) {
+const elemOfExecuteScript = function (str) {
   let div = document.createElement('div');
   div.innerHTML = str;
 
@@ -53,7 +53,7 @@ const findLargestPlayingVideo = function (doc) {
  * @param {string} [shadowSelector] 如果需要在 shadow dom 中查找，需要指定其的选择器
  * @return {HTMLVideoElement}
  */
-let findVideo = (doc, selector, shadowSelector) => {
+let findVideoExecuteScript = (doc, selector, shadowSelector) => {
   let target = selector || "video";
 
   // 优先从首层 document 中查找元素
@@ -61,7 +61,6 @@ let findVideo = (doc, selector, shadowSelector) => {
   if (v) {
     return v;
   }
-
 
   // 首层中没有找到时，从所在 iframe 中查找
   let iframes = document.querySelectorAll("iframe");

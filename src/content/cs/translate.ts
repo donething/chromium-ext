@@ -1,8 +1,7 @@
 // 选中文字后，按 Ctrl 弹出翻译
 // api @see https://blog.csdn.net/panshiqu/article/details/104193607
 
-import {request} from "do-utils/dist/utils"
-import {elemOf, Msg, showMsg} from "do-utils/dist/elem"
+import {elemOf, Msg, request, showMsg} from "do-utils";
 
 export const Translate = {
   TAG: "[Trans]",
@@ -81,8 +80,8 @@ export const Translate = {
       chrome.runtime.sendMessage({cmd: "cors", url: url}, async resp => {
         // 获取翻译出错
         if (!resp.ok) {
-          showMsg("获取翻译结果出错", Msg.error)
           console.log(this.TAG, "获取翻译结果出错：", resp.text)
+          await showMsg("获取翻译结果出错", Msg.error)
           return
         }
 

@@ -2,8 +2,7 @@
  * 在`localhost`域名下执行网站
  */
 import {M3uPlaylist, M3uMedia} from 'm3u-parser-generator'
-import {sleep} from "do-utils"
-import {download} from "do-utils/dist/elem"
+import {download, sleep} from "do-utils"
 
 const TAG = "[CEXT]"
 

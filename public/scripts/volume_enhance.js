@@ -14,7 +14,7 @@ if (typeof window.enhanceVolume !== "function") {
    */
   window.enhanceVolume = function (value) {
     // 查找媒体元素
-    let media = findVideo(document) || document.querySelector("audio");
+    let media = findVideoExecuteScript(document) || document.querySelector("audio");
     // 最终都没有找到媒体元素时，退出执行
     if (!media) {
       console.log(TAG, "未发现媒体元素，退出音量增强器");

@@ -1,6 +1,6 @@
 // 扩展斗鱼直播间的功能
 
-import {waitForElem} from "do-utils/dist/elem"
+import {waitForElem} from "do-utils";
 
 const TAG = "[DY_LIVE]"
 

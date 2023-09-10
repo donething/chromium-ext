@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import {Slider, Space} from "antd"
-import Icon from '@ant-design/icons'
 import {ReactComponent as IconVolume} from "../../icons/volume.svg"
 import {ReactComponent as IconBili} from "../../icons/bili.svg"
 import {ReactComponent as IconVideo} from "../../icons/video.svg"
@@ -9,8 +7,10 @@ import {ReactComponent as IconVideoTool} from "../../icons/video_tool.svg"
 import {ReactComponent as IconTV} from "../../icons/tv.svg"
 import {ReactComponent as IconStatus} from "../../icons/status.svg"
 import {ReactComponent as IconOptions} from "../../icons/options.svg"
+import {Button, Slider, Stack, SvgIcon} from "@mui/material";
 
 declare global {
+  // 调用 window.enhanceVolume 需要用到 Window
   interface Window {
     enhanceVolume: (volEn?: number) => void
   }
@@ -87,43 +87,47 @@ const Popup = function (): JSX.Element {
     }
   }, [])
 
-
   return (
-    <Space direction="vertical" style={{width: 100, padding: 5}}>
+    <Stack width={100}>
       <span className="row align-center">
-        <Icon title="恢复为默认增强值 1" component={IconVolume} onClick={() => updateVolEnhance(1)}/>
+        <SvgIcon title="恢复为默认增强值 1" component={IconVolume} onClick={() => updateVolEnhance(1)}/>
         <Slider className="width-fill-remain margin-h-large" min={0} max={10} step={0.1} value={volEnValue}
-                disabled={volEnValue === -1} onChange={v => updateVolEnhance(v)}/>
+                disabled={volEnValue === -1}
+                onChange={(_, value) => {
+                  updateVolEnhance(Array.isArray(value) ? value[0] : value)
+                }}/>
       </span>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/bili_video"})}>
-        <Icon component={IconBili}/> 哔哩视频
-      </span>
+      <Button startIcon={<SvgIcon component={IconBili} viewBox={"0 0 1024 1024"}/>}
+              onClick={() => chrome.tabs.create({url: "/index.html#/bili_video"})}>
+        哔哩视频
+      </Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/video_fav"})}>
-        <Icon component={IconVideo}/> 视频收藏
-      </span>
+      <Button startIcon={<SvgIcon component={IconVideo} viewBox={"0 0 1024 1024"}/>}
+              onClick={() => chrome.tabs.create({url: "/index.html#/video_fav"})}>
+        视频收藏
+      </Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/video_tool"})}>
-        <Icon component={IconVideoTool}/> 视频工具
-      </span>
+      <Button startIcon={<SvgIcon component={IconHeaders} viewBox={"0 0 1024 1024"}/>}
+              onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}>
+        转请求头
+      </Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/http_headers"})}>
-        <Icon component={IconHeaders}/> 转请求头
-      </span>
+      <Button startIcon={<SvgIcon component={IconTV} viewBox={"0 0 1024 1024"}/>}
+              onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}>
+        IPTV 源
+      </Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/iptv"})}>
-        <Icon component={IconTV}/> IPTV源
-      </span>
+      <Button startIcon={<SvgIcon component={IconStatus} viewBox={"0 0 1024 1024"}/>}
+              onClick={() => chrome.tabs.create({url: "chrome://sync-internals"})}>
+        浏览器
+      </Button>
 
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "chrome://sync-internals"})}>
-        <Icon component={IconStatus}/> 浏览器
-      </span>
-
-      <span className="clickable" onClick={() => chrome.tabs.create({url: "/index.html#/options"})}>
-        <Icon component={IconOptions}/> 选项
-      </span>
-    </Space>
+      <Button startIcon={<SvgIcon component={IconOptions} viewBox={"0 0 1024 1024"}/>}
+              onClick={() => chrome.tabs.create({url: "/index.html#/options"})}>
+        选项
+      </Button>
+    </Stack>
   )
 }
 

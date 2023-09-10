@@ -1,21 +1,7 @@
 import React, {useEffect, useState} from "react"
-import {Button, message} from "antd"
-import {CloseOutlined} from '@ant-design/icons'
-
-// 视频信息
-interface Video {
-  extra: {
-    cover: string
-    id: string
-    title: string
-  }
-  time: {
-    // 片头曲开始时间
-    end: string
-    // 片尾曲开始时间
-    open: string
-  }
-}
+import {IconButton, Typography} from "@mui/material"
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import {VideoInfo, VideoItemProps} from "./types"
 
 // 根据平台，解析链接、图标等
 const parsePlat = function (plat: string, id: string): { site: string, url: string, icon: string } {
@@ -28,16 +14,9 @@ const parsePlat = function (plat: string, id: string): { site: string, url: stri
         icon: "https://www.bilibili.com/favicon.ico",
       }
     default:
-      message.warn(`错误的平台："${plat}"`)
       console.log("错误的平台：", plat, id)
       return {site: "错误的平台", url: "", icon: ""}
   }
-}
-
-interface VideoItemProps {
-  plat: string
-  video: Video
-  setFolders: React.Dispatch<React.SetStateAction<Array<JSX.Element>>>
 }
 
 // 单个视频的布局
@@ -57,16 +36,14 @@ const VideoItem = function (props: VideoItemProps) {
         target.style.display = "none"
       }}>
         <div className="mask">
-          <img src={props.video.extra.cover} style={{width: 190, height: 119, borderRadius: 3}}/>
+          <img alt={"封面"} src={props.video.extra.cover} style={{width: 190, height: 119, borderRadius: 3}}/>
           <div className="col justify-center meta" style={{display: "none"}}>
-            <Button title="删除" icon={<CloseOutlined/>} type="primary" shape="circle" size="small" danger
-                    style={{position: "absolute", top: 8, right: 8}}
-                    onClick={e => {
-                      console.log("还未实现删除")
-                      e.preventDefault()
-                      e.stopPropagation()
-                    }}
-            />
+            <IconButton title={"删除"} color={"warning"} style={{position: "absolute", top: 8, right: 8}}
+                        onClick={e => {
+                          console.log("还未实现删除")
+                          e.preventDefault()
+                          e.stopPropagation()
+                        }}><DeleteForeverIcon/></IconButton>
             <div>片头：{(props.video.time.open || "未设定") + " 秒"}</div>
             <div>片尾：{(props.video.time.end || "未设定") + " 秒"}</div>
           </div>
@@ -83,7 +60,7 @@ const VideoItem = function (props: VideoItemProps) {
 // 单个平台下视频的布局的参数
 interface FolderItemProps {
   plat: string
-  videos: { [id: string]: Video }
+  videos: { [id: string]: VideoInfo }
   setTotal: React.Dispatch<React.SetStateAction<number>>
   setFolders: React.Dispatch<React.SetStateAction<Array<JSX.Element>>>
 }
@@ -105,9 +82,9 @@ const FolderItem = function (props: FolderItemProps) {
   return (
     <li>
       <hr/>
-      <h4 className="sticky" style={{background: "rgba(0, 161, 214)", color: "#FFF"}}>
+      <Typography className="sticky" style={{background: "rgba(0, 161, 214)", color: "#FFF"}}>
         {`${site} (共 ${count} 部)`}
-      </h4>
+      </Typography>
       <ul className="row wrap">
         {items}
       </ul>
@@ -127,7 +104,7 @@ const VideoFav = function () {
   useEffect(() => {
     const init = async () => {
       let data = await chrome.storage.sync.get({fav_videos: {}})
-      let favVideos: { [site: string]: { [id: string]: Video } } = data.fav_videos
+      let favVideos: { [site: string]: { [id: string]: VideoInfo } } = data.fav_videos
       for (const [site, videos] of Object.entries(favVideos)) {
         let item = <FolderItem key={site} plat={site} videos={videos}
                                setTotal={setTotal} setFolders={setFolders}/>
@@ -140,7 +117,7 @@ const VideoFav = function () {
 
   return (
     <div style={{padding: 5}}>
-      <h4>共收藏 {total} 个视频</h4>
+      <Typography>共收藏 {total} 个视频</Typography>
       <ul>
         {folders}
       </ul>

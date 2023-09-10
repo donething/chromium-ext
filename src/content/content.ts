@@ -1,11 +1,11 @@
 // 全网站通用的内容脚本
 
 import {Translate} from "./cs/translate"
-import {insertJSSrc} from "do-utils/dist/elem"
+import {insertJSSrc} from "do-utils";
 
 const TAG = "[CS]"
 
-const deal = async function () {
+const deal = async () => {
   let data = await chrome.storage.sync.get({settings: {}})
 
   // 禁止网页检测是否切换到了后台
@@ -25,13 +25,12 @@ const deal = async function () {
     insertJSSrc(chrome.runtime.getURL("/scripts/disable-visibility.js"))
   }
 
-
   // 选中文本后，按 Ctrl 翻译
   if (data.settings.enableTranslate === false) {
     console.log(TAG, "根据设置 已禁用选中文字后，按 Ctrl 弹出翻译")
   } else {
     console.log(TAG, "已开启 选中文字后，按 Ctrl 弹出翻译")
-    Translate.init()
+    await Translate.init()
   }
 }
 

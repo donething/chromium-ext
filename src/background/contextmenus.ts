@@ -1,9 +1,7 @@
 // 创建上下文菜单
 
 import qrcodeParser from "qrcode-parser"
-import {copyTextInBG} from "do-utils"
-import {request} from "do-utils/dist/utils"
-import {notify} from "do-utils/dist/elem"
+import {copyTextInBG, notify, request} from "do-utils"
 
 /**
  * 优先选择文本数据

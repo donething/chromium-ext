@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {Avatar, message} from "antd"
+import {Avatar} from "@mui/material";
 
 // 频道信息
 type Channel = {
@@ -58,7 +58,7 @@ const CHCtyItem = function (props: { country: string, chs: Array<Channel> }) {
 const CHItem = function (props: { ch: Channel }) {
   return (
     <li className="row margin-v">
-      <Avatar className="margin-right-large" src="/icons/sign/loading.svg" srcSet={props.ch.logo} size="small"/>
+      <Avatar className="margin-right-large" src="/icons/sign/loading.svg" srcSet={props.ch.logo}/>
       <a href={`potplayer://${props.ch.url}`} title={props.ch.name}>{props.ch.name}</a>
     </li>
   )
@@ -78,7 +78,6 @@ export const IPTV = function () {
       let resp = await fetch("https://iptv-org.github.io/iptv/channels.json")
       if (!resp.ok) {
         console.log("获取 IPTV 直播地址的列表时出错：", await resp.text())
-        message.error("获取 IPTV 直播地址的列表时出错")
         return
       }
 

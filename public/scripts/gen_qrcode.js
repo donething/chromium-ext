@@ -2347,7 +2347,7 @@ if (typeof window.genQRCode !== "function") {
     let htmlURL = chrome.runtime.getURL("/htmls/gen_qrcode.html");
     // 不能用 utils.rquest() ，导入会报错：Cannot use import statement outside a module
     let resp = await fetch(htmlURL);
-    let html = elemOf(await resp.text());
+    let html = elemOfExecuteScript(await resp.text());
     html.children[0].innerText = content.replaceAll("\n", " ");
     html.children[0].name = content;
     html.children[1].style.backgroundImage = `url('data:image/svg+xml,${img}')`;

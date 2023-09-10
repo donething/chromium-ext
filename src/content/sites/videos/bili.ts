@@ -1,7 +1,7 @@
 // B站 视频扩展
 
 import {VideoBase, VideoType} from "./basic"
-import {insertJSSrc, waitForElem} from "do-utils/dist/elem"
+import {insertJSSrc, waitForElem} from "do-utils";
 
 // B站 视频扩展
 class Bili extends VideoBase {

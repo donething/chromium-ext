@@ -4,10 +4,8 @@
 // 所以理论**不用担心**在打开多个网站时，后来的修改会覆盖前一个网站上的修改的问题，
 // 即当两个网站都读取、修改了数据，导致后一个保存操作会覆盖前一个保存操作，导致前一个的数据还是之前的数据的问题
 
-import {request} from "do-utils/dist/utils"
+import {Msg, parseSec, request, showMsg, waitForElem, elemOf} from "do-utils";
 import {isInputElem} from "../../../comm/utils"
-import {elemOf, Msg, showMsg, waitForElem} from "do-utils/dist/elem"
-import {parseSec} from "do-utils/dist/text"
 
 // typescript 向内置对象声明属性
 declare global {
@@ -103,7 +101,7 @@ export abstract class VideoBase {
 
     if (!extra.id) {
       console.log(this.TAG, "没有匹配到视频的ID，退出执行")
-      showMsg("没有匹配到视频的ID，退出执行", Msg.warning)
+      await showMsg("没有匹配到视频的ID，退出执行", Msg.warning)
       return
     }
 

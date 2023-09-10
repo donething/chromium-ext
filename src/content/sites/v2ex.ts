@@ -1,6 +1,6 @@
 // v2ex的扩展
-import {request} from "do-utils/dist/utils"
-import {elemOf, Msg, showMsg} from "do-utils/dist/elem"
+
+import {Msg, request, showMsg, elemOf} from "do-utils";
 
 // 回复
 type Reply = {
@@ -63,7 +63,7 @@ const V2ex = {
         }
 
         // 发送消息，新标签打开帖子
-        chrome.runtime.sendMessage({
+        await chrome.runtime.sendMessage({
           cmd: "viewTopic",
           tid: group[1]
         })

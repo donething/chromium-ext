@@ -1,8 +1,8 @@
-import {request} from "do-utils/dist/utils"
 import {initCtxMenu} from "./contextmenus"
-import {notify} from "do-utils/dist/elem"
 import RuleActionType = chrome.declarativeNetRequest.RuleActionType
 import ResourceType = chrome.declarativeNetRequest.ResourceType
+import {notify, request} from "do-utils";
+
 // 在第三方浏览帖子的扩展的名字
 const EXT_VIEW_TOPICS = "Chromium Tasks"
 

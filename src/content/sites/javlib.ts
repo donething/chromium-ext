@@ -1,5 +1,6 @@
 // 扩展 Javlib 的功能
-import {copyText, elemOf, Msg, showMsg} from "do-utils/dist/elem"
+
+import {copyText, elemOf, Msg, showMsg} from "do-utils"
 
 const Javlib = {
   TAG: "[Javlib]",
@@ -23,7 +24,7 @@ const Javlib = {
     let videoIDElem = document.querySelector("#video_id")
     if (!videoIDElem) {
       console.log(this.TAG, "添加超链接出错：没有找到 video id 的元素")
-      showMsg("扩展添加超链接出错", Msg.warning)
+      await showMsg("扩展添加超链接出错", Msg.warning)
       return
     }
 
@@ -56,12 +57,12 @@ const Javlib = {
     // 查询本地是否存在字幕
     let url = `${this.host}/api/fanhao/subtitle`
     let msg = {cmd: "cors", url: url, data: {fanhao: fanhao}}
-    chrome.runtime.sendMessage(msg, resp => {
+    chrome.runtime.sendMessage(msg, async resp => {
       let result = JSON.parse(resp.text)
       // 出错了
       if (result["code"] !== 0) {
         console.log(this.TAG, "查找字幕出错：", resp.text)
-        showMsg(`查找字幕出错：${result.msg}`, Msg.error)
+        await showMsg(`查找字幕出错：${result.msg}`, Msg.error)
         return
       }
 
@@ -87,7 +88,7 @@ const Javlib = {
     // 可能有多个演员参演
     let starsNode = document.querySelectorAll(".cast .star a")
     if (starsNode.length === 0) {
-      showMsg("演员列表为空，无法添加搜索链接", Msg.warning)
+      await showMsg("演员列表为空，无法添加搜索链接", Msg.warning)
       return
     }
     // 遍历演员列表，逐个注册右击搜索事件
@@ -112,11 +113,11 @@ const Javlib = {
     // discuz!的搜索规则，先访问搜索API获取formhash，再根据该formhash创建搜索链接，打开该链接即可查看结果
     // 先获取formhash，以创建请求
     let msg = {cmd: "cors", url: "https://www.sehuatang.org/search.php"}
-    chrome.runtime.sendMessage(msg, resp => {
+    chrome.runtime.sendMessage(msg, async resp => {
       let m = resp.text.match(/<input.*?formhash.*?value="(\w+)"/)
       if (m.length <= 1) {
         console.log(this.TAG, "添加色花堂搜索按钮时出错：", resp.text)
-        showMsg("添加色花堂搜索按钮时出错", Msg.warning)
+        await showMsg("添加色花堂搜索按钮时出错", Msg.warning)
         return
       }
 
@@ -142,11 +143,11 @@ const Javlib = {
     let url = `${this.host}/api/fanhao/exist`
     // 查询本地文件时，只传递番号列表即可
     let fanhaos = Object.keys(fanhaosObj)
-    chrome.runtime.sendMessage({cmd: "cors", url: url, data: fanhaos}, resp => {
+    chrome.runtime.sendMessage({cmd: "cors", url: url, data: fanhaos}, async resp => {
       // 解析
       let results = JSON.parse(resp.text)
       if (results.code !== 0) {
-        showMsg("查找本地是否存在该影片时出错", Msg.error)
+        await showMsg("查找本地是否存在该影片时出错", Msg.error)
         console.log(this.TAG, "查找本地是否存在该影片时出错：", resp.text)
         return
       }
@@ -170,12 +171,12 @@ const Javlib = {
         fanhaosObj[fanhao].oncontextmenu = (e) => e.preventDefault()
 
         // onclick事件无法捕获右击，所以用onmouse*事件
-        fanhaosObj[fanhao].onmouseup = (event: MouseEvent) => {
+        fanhaosObj[fanhao].onmouseup = async (event: MouseEvent) => {
           if (event.button === 2) {
             copyText(document, fanhao)
-            showMsg(`已复制番号"${fanhao}"`, Msg.success)
+            await showMsg(`已复制番号"${fanhao}"`, Msg.success)
           } else if (event.button === 0 && results.data[fanhao]) {
-            chrome.runtime.sendMessage({
+            await chrome.runtime.sendMessage({
               cmd: "cors",
               url: `${this.host}/api/openfile`,
               data: {method: "show", path: results.data[fanhao]}
@@ -220,7 +221,7 @@ const Javlib = {
     let span = elemOf(`<span style="color: rgba(0,0,0,0.3)">（已屏蔽 ${ban} 条垃圾评论）</span>`)
     if (!titleNode) {
       console.log("评论栏元素不存在，无法显示垃圾评论的条数")
-      showMsg("评论栏元素不存在", Msg.warning)
+      await showMsg("评论栏元素不存在", Msg.warning)
       return
     } else {
       titleNode.appendChild(span)
