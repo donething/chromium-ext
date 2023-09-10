@@ -100,9 +100,11 @@ const Options = function () {
   }, [])
 
   return (
-    <Stack direction={"row"} padding={2}>
+    <Stack direction={"row"} padding={2} gap={2}>
       <Functions/>
+
       <JavAds/>
+
       <DoBackupPanelChromium/>
     </Stack>
   )
