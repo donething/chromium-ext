@@ -5,8 +5,8 @@ import Popup from "./pages/popup/Popup"
 import Options from "./pages/options/Options"
 import BiliFav from "./pages/bili_fav/bili_fav"
 import VideoFav from "./pages/videos_fav/videos_fav"
-import HttpHeaders from "./pages/http_headers"
-import {IPTV} from "./pages/iptv"
+import HttpHeaders from "./pages/http_headers/http_headers"
+import {IPTV} from "./pages/iptv/iptv"
 import {DoDialog, DoSnackbar} from "do-comps";
 import './index.css'
 
