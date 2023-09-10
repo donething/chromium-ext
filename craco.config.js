@@ -19,6 +19,7 @@ module.exports = {
           jd_buy: './src/content/sites/jd_buy.ts',
           alist: './src/content/sites/alist.ts',
           google_search: './src/content/sites/google_search.ts',
+          laow: './src/content/sites/laow.ts',
           service_worker: './src/background/service_worker.ts',
           // 单独打包依赖库
           // libs: ["jsdom"]

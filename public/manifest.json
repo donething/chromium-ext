@@ -121,6 +121,14 @@
     },
     {
       "matches": [
+        "*://*.laowang.vip/*"
+      ],
+      "js": [
+        "/static/js/laow.js"
+      ]
+    },
+    {
+      "matches": [
         "*://*.v2ex.com/*"
       ],
       "js": [
