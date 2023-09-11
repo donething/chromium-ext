@@ -4,6 +4,7 @@ const TAG = "[V2PH]"
 
 // 禁用图集页面的延迟加载图片
 const disableLazyLoad = () => {
+  // 图集的列表（模特页面）、图集中图片的列表（图集详情页面）
   const imgs: NodeListOf<HTMLImageElement> = document.querySelectorAll(".albums-list,.photos-list img")
   for (let img of imgs) {
     if (!img.dataset["src"]) {
@@ -18,7 +19,8 @@ const disableLazyLoad = () => {
 }
 
 const start = () => {
-  if (window.location.pathname.startsWith("/album/")) {
+  const path = window.location.pathname
+  if (path.startsWith("/album/") || path.startsWith("/actor/")) {
     console.log(TAG, "禁用图集页面中延迟加载图片")
     disableLazyLoad()
   }

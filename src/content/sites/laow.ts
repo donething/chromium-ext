@@ -82,21 +82,28 @@ const addHadDLButton = async () => {
   button.style.height = "54px"
   button.style.zIndex = "2"
   button.style.position = "relative"
-  button.style.background = "#FFD0DA"
-  button.style.color = "#999"
+  button.style.color = "#555"
   button.style.border = "none"
   button.style.marginTop = "1px"
   button.style.cursor = "pointer"
+
+  // 当已下载过时，显示的样式
+  const updateHadDl = () => {
+    button.innerText = "已下载"
+    button.style.background = "#FFD0DA"
+    button.disabled = true
+  }
 
   // 从存储中获取，是否已下载过
   const obj = await chrome.storage.sync.get({[KEY]: {}})
   const data: SnycData = obj.laow
   if (data.hadDL?.includes(tid)) {
-    button.innerText = "已下载"
-    button.disabled = true
+    updateHadDl()
   } else {
     // 未下载时，点击按钮设置'已下载'
     button.innerText = "设为\n已下载"
+    button.style.background = "#E55B5B"
+
     // 设置点击事件
     button.onclick = async () => {
       const obj = await chrome.storage.sync.get({[KEY]: {}})
@@ -117,8 +124,7 @@ const addHadDLButton = async () => {
       await chrome.storage.sync.set({[KEY]: data})
 
       // 设置完成
-      button.disabled = true
-      button.innerText = "已下载"
+      updateHadDl()
     }
   }
 

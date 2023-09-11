@@ -3,9 +3,11 @@ module.exports = {
     configure: (webpackConfig, {env, paths}) => {
       return {
         ...webpackConfig,
+
         entry: {
           main: [env === 'development' &&
           require.resolve('react-dev-utils/webpackHotDevClient'), paths.appIndexJs].filter(Boolean),
+
           // 此例中打包源文件"./src/content/content.ts"，输出名为"build/static/js/content.js"，每行一个
           content: './src/content/content.ts',
           bd2020_dl_page: './src/content/sites/bd2020_dl_page.ts',
