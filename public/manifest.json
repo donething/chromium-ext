@@ -134,6 +134,14 @@
       "js": [
         "/static/js/v2ex.js"
       ]
+    },
+    {
+      "matches": [
+        "*://*.v2ph.com/*"
+      ],
+      "js": [
+        "/static/js/v2ph.js"
+      ]
     }
   ],
   "action": {

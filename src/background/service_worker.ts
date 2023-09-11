@@ -131,7 +131,9 @@ const viewTopic = async (tid: string) => {
  */
 const initDeclarativeNet = () => {
   chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: [1],
+    // 先移除同名规则，避免重复添加
+    removeRuleIds: [1, 2],
+
     addRules: [
       {
         id: 1,
