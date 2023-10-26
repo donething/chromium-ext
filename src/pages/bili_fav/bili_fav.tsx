@@ -29,6 +29,7 @@ const VideoItem = (props: { media: FavResp.Media }) => {
   }
   */
   // 为避免循环渲染，增加useEffect和唯一约束
+  // props.media.id 表示已换了下个视频，不用 props.media.title 是因为不同视频可能标题一样，逻辑不适合
   useEffect(() => {
     if (props.media.title === "已失效视频") {
       setLost(prev => prev + 1);
@@ -134,7 +135,7 @@ const BiliFav = function () {
 
       setFavDatas(prev => [...(prev || []), obj.data])
     }
-  }, [])
+  }, [showSb])
 
   const items = React.useMemo(() => {
     return favDatas?.map(fav => {
@@ -151,7 +152,7 @@ const BiliFav = function () {
 
     // 当组件被导入后开始获取数据
     init()
-  }, [])
+  }, [init])
 
   return (
     <Stack gap={2} padding={2}>

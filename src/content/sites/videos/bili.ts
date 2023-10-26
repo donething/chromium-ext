@@ -2,6 +2,7 @@
 
 import {VideoBase, VideoType} from "./basic"
 import {insertJSSrc, waitForElem} from "do-utils";
+import {Settings} from "../../../pages/options/types"
 
 // B站 视频扩展
 class Bili extends VideoBase {
@@ -51,19 +52,20 @@ class Bili extends VideoBase {
     }
 
     // 其次 跳过片头尾等
-    super.onVideoPlay()
+    await super.onVideoPlay()
   }
 }
 
 const deal = async () => {
-  let data = await chrome.storage.sync.get({settings: {}})
-  if (data.settings.enableBiliVideo === false) {
+  const data = await chrome.storage.sync.get({settings: {}})
+  const settings: Settings = data.settings
+  if (settings.disables?.biliVideo) {
     console.log("[Bili]", "根据设置 已禁用哔哩哔哩视频扩展")
     return
   }
 
   let bili = new Bili()
-  bili.start()
+  await bili.start()
 }
 
 // 执行

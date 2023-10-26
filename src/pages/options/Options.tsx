@@ -11,42 +11,69 @@ import {
   TextField, Typography
 } from "@mui/material";
 import {DoBackupPanelChromium, useSharedSnackbar} from "do-comps";
+import {DisableSettings, Settings} from "./types"
 
-// 功能开关
-const Functions = () => {
-  // 将开关变更保存到存储中
-  let onSwitch = async (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
+// 禁用功能的开关
+const Disable = () => {
+  const [disables, setDisables] = React.useState<DisableSettings>({})
+
+  const init = React.useCallback(async () => {
     let data = await chrome.storage.sync.get({settings: {}})
-    data.settings[key] = e.target.checked
-    chrome.storage.sync.set({settings: data.settings})
-  }
+    const settings: Settings = data.settings
+    if (!settings.disables) {
+      settings.disables = {}
+    }
+
+    setDisables(data.settings.disables)
+  }, [])
+
+  // 将开关变更保存到存储中
+  const onSwitch = React.useCallback(async (value: boolean, key: keyof DisableSettings) => {
+    const data = await chrome.storage.sync.get({settings: {}})
+
+    setDisables(prev => {
+      const n = {...prev, [key]: value}
+      data.settings.disables = n
+      chrome.storage.sync.set({settings: data.settings})
+      return n
+    })
+  }, [])
+
+  useEffect(() => {
+    init()
+  }, [init])
 
   return (
     <Card sx={{width: 300}}>
-      <CardHeader title={"准许功能"}/>
+      <CardHeader title={"禁用功能"}/>
 
       <Divider/>
 
       <CardContent sx={{display: "flex", flexFlow: "column nowrap", gap: 4}}>
         <FormControlLabel label="哔哩哔哩"
-                          control={<Switch title={"是否准许"} defaultChecked size={"small"}
-                                           onChange={e => onSwitch(e, "enableBiliVideo")}/>}/>
+                          control={<Switch title={"是否禁用"} size={"small"}
+                                           checked={disables.biliVideo}
+                                           onChange={e => onSwitch(e.target.checked, "biliVideo")}/>}/>
 
         <FormControlLabel label="Javlib"
-                          control={<Switch title={"是否准许"} defaultChecked size={"small"}
-                                           onChange={e => onSwitch(e, "enableJavlib")}/>}/>
+                          control={<Switch title={"是否禁用"} size={"small"}
+                                           checked={disables.javlib}
+                                           onChange={e => onSwitch(e.target.checked, "javlib")}/>}/>
 
         <FormControlLabel label="Translate"
-                          control={<Switch title={"是否准许"} defaultChecked size={"small"}
-                                           onChange={e => onSwitch(e, "enableTranslate")}/>}/>
+                          control={<Switch title={"是否禁用"} size={"small"}
+                                           checked={disables.translate}
+                                           onChange={e => onSwitch(e.target.checked, "translate")}/>}/>
 
         <FormControlLabel label="V2ex"
-                          control={<Switch title={"是否准许"} defaultChecked size={"small"}
-                                           onChange={e => onSwitch(e, "enableV2ex")}/>}/>
+                          control={<Switch title={"是否禁用"} size={"small"}
+                                           checked={disables.v2ex}
+                                           onChange={e => onSwitch(e.target.checked, "v2ex")}/>}/>
 
-        <FormControlLabel label="Disable Visibility API"
-                          control={<Switch title={"是否准许"} defaultChecked size={"small"}
-                                           onChange={e => onSwitch(e, "enableDisableVisibilityAPI")}/>}/>
+        <FormControlLabel label="Visibility API"
+                          control={<Switch title={"是否禁用"} size={"small"}
+                                           checked={disables.visibilityAPI}
+                                           onChange={e => onSwitch(e.target.checked, "visibilityAPI")}/>}/>
       </CardContent>
     </Card>
   )
@@ -58,13 +85,14 @@ const JavAds = () => {
 
   const {showSb} = useSharedSnackbar()
 
-  useEffect(() => {
-    const init = async () => {
-      let data = await chrome.storage.sync.get({settings: {javlibAds: ""}})
-      setValue(data.settings.javlibAds)
-    }
-    init()
+  const init = React.useCallback(async () => {
+    let data = await chrome.storage.sync.get({settings: {javlibAds: ""}})
+    setValue(data.settings.javlibAds)
   }, [])
+
+  useEffect(() => {
+    init()
+  }, [init])
 
   return (
     <Card sx={{width: 300}}>
@@ -82,9 +110,10 @@ const JavAds = () => {
 
       <CardActions>
         <Button variant={"contained"} onClick={async _ => {
-          let data = await chrome.storage.sync.get({settings: {javlibAds: ""}})
+          const data = await chrome.storage.sync.get({settings: {}})
+
           data.settings.javlibAds = value
-          chrome.storage.sync.set({settings: data.settings})
+          await chrome.storage.sync.set({settings: data.settings})
           showSb({open: true, message: "已保存广告关键字", severity: "success"})
         }}>
           保存
@@ -101,7 +130,7 @@ const Options = function () {
 
   return (
     <Stack direction={"row"} padding={2} gap={2}>
-      <Functions/>
+      <Disable/>
 
       <JavAds/>
 

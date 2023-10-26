@@ -25,7 +25,7 @@ const VideoItem = function (props: VideoItemProps) {
 
   return (
     <li className="col" style={{width: 190, margin: "5px 15px 15px 0"}}>
-      <a href={info.url} title={props.video.extra.title} target="_blank"
+      <a href={info.url} title={props.video.extra.title} target="_blank" rel={"noreferrer"}
          onMouseEnter={e => {
            let atag = (e.target as HTMLElement).closest("a") as HTMLElement
            let target = atag.firstElementChild?.children[1] as HTMLElement

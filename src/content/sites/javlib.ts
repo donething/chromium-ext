@@ -1,6 +1,7 @@
 // 扩展 Javlib 的功能
 
 import {copyText, elemOf, Msg, showMsg} from "do-utils"
+import {Settings} from "../../pages/options/types"
 
 const Javlib = {
   TAG: "[Javlib]",
@@ -240,8 +241,9 @@ const Javlib = {
 }
 
 const deal = async function () {
-  let data = await chrome.storage.sync.get({settings: {}})
-  if (data.settings.enableJavlib === false) {
+  const data = await chrome.storage.sync.get({settings: {}})
+  const settings: Settings = data.settings
+  if (settings.disables?.javlib) {
     console.log(Javlib.TAG, "根据设置 已禁用该网站上的扩展功能")
     return
   }

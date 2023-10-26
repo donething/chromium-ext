@@ -2,14 +2,16 @@
 
 import {Translate} from "./cs/translate"
 import {insertJSSrc} from "do-utils";
+import {Settings} from "../pages/options/types"
 
 const TAG = "[CS]"
 
 const deal = async () => {
-  let data = await chrome.storage.sync.get({settings: {}})
+  const data = await chrome.storage.sync.get({settings: {}})
+  const settings: Settings = data.settings
 
   // 禁止网页检测是否切换到了后台
-  if (data.settings.enableDisableVisibilityAPI === false) {
+  if (settings.disables?.visibilityAPI) {
     console.log(TAG, "根据设置 已禁用禁止网页检测是否切换到了后台")
   } else {
     console.log(TAG, "禁止网页检测是否切换到了后台")
@@ -26,7 +28,7 @@ const deal = async () => {
   }
 
   // 选中文本后，按 Ctrl 翻译
-  if (data.settings.enableTranslate === false) {
+  if (settings.disables?.translate) {
     console.log(TAG, "根据设置 已禁用选中文字后，按 Ctrl 弹出翻译")
   } else {
     console.log(TAG, "已开启 选中文字后，按 Ctrl 弹出翻译")
