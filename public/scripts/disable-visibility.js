@@ -8,26 +8,31 @@
 Object.defineProperty(Document.prototype, "hidden", {
     get: function () {
       // console.log("[visibility]", "网站读取网页可见性：'hidden'");
-      return false;
+      return false
     },
     enumerable: true,
     configurable: true
   }
-);
+)
 
 Object.defineProperty(Document.prototype, "visibilityState", {
     get: function () {
       // console.log("[visibility]", "网站读取网页可见性：'visibilityState'");
-      return "visible";
+      return "visible"
     },
     enumerable: true,
     configurable: true
   }
-);
+)
 
 // 捕获事情
 for (let eventName of ["visibilitychange", "webkitvisibilitychange", "blur"]) {
   window.addEventListener(eventName, (event) => {
-    event.stopImmediatePropagation();
-  }, true);
+    // 跳过输入元素，避免自动完成输入下拉框不自动消失
+    if (event.target.tagName === "INPUT") {
+      return
+    }
+
+    event.stopImmediatePropagation()
+  }, true)
 }
